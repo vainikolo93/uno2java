@@ -1,0 +1,82 @@
+
+UNO by Aaron Cole
+
+
+
+Itemized list of rules, with assigned point values of importance
+
+
+		      UNO RULES								POINT VALUE
+----------------------------------------------------------------------------------------------------
++The first player to score 500 points wins						5%	
+        -Points are scored by ridding yourself of all cards
+            in your hand before your opponents
+        -You score points for cards left in your opponent's hands
+----------------------------------------------------------------------------------------------------
++Each player is dealt 7 cards, the remaining cards are placed				5%
+    into a face down pile, the top card is turned over to begin
+    a discard pile
+----------------------------------------------------------------------------------------------------
++To play a card, the player must match either the COLOR or the				15%
+    TYPE, for example "Red 7" <-- "Red Skip" || "Yellow 7"
+----------------------------------------------------------------------------------------------------
++If the player cannot match the COLOR or TYPE, they can also				15%
+    play a WILD
+        -After playing a WILD, the player gets to choose a new
+            color
+        -Normal Wilds can be played at anytime
+        -Wild +4's can only be played if the player has no
+            other playable cards
+----------------------------------------------------------------------------------------------------
++If the player has no cards to play, they must draw a card				10%
+----------------------------------------------------------------------------------------------------
++Action cards have different effects							15%
+        -Reverse: change the direction of gameplay
+        -Draw +2: the next player must draw two cards AND
+                    skips their turn
+        -Skip:    skip the next player
+        -Wild:    the player gets to choose a new color
+        -Wild +4: the player gets to choose a new color AND
+                    the next player must draw four cards AND
+                    skips their turn
+----------------------------------------------------------------------------------------------------
++To choose the starting player, each player chooses a card,				5%
+    the highest number card deals (Action cards don't count).
+    The person to the left of the dealer starts play
+----------------------------------------------------------------------------------------------------
++If an Action card is turned up from the draw pile: 					5%
+        -Reverse: the dealer plays first
+        -Draw +2: the starting player must draw two cards AND
+                    skips their turn
+        -Skip:    skip the starting player
+        -Wild:    the starting player gets to choose a color
+                    and then plays
+        -Wild +4: illegal, this is shuffled back into the
+                    deck and a new card is chosen
+----------------------------------------------------------------------------------------------------
++When a player has one card left in their hand, the must call				10%
+    "UNO"
+----------------------------------------------------------------------------------------------------
++Penalties:										10%
+        -If a player does not call "UNO" and another player
+            catches them, them must draw 2 cards
+        -Additionally, if a player false calls "UNO" or false
+            calls a failure to call "UNO", they must draw 2 
+            cards
+----------------------------------------------------------------------------------------------------
++After a player plays their last card, all the cards from their				5%
+    opponent's hands are added up for their score, if the score
+    is less than 500, another round starts
+        -Draw +2 and Wild +4 effects still take place for the
+            last card
+        -Scores are as follows:
+                Number Cards: face value
+		Reverse:      20 points
+		Draw +2:      20 points
+		Skip:         20 points
+		Wild:         50 points
+		Wild +4:      50 points
+----------------------------------------------------------------------------------------------------
+
+For a complete list of rules:
+http://www.wonkavator.com/uno/unorules.html
