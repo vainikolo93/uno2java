@@ -1,10 +1,12 @@
+import java.io.IOException;
+
 import javax.swing.JFrame;
 
 
 public class Main 
 {
 	//@SuppressWarnings("null")
-	public static void main(String[] args)
+	public static void main(String[] args) throws IOException
 	{
 
 		JFrame jf = new JFrame("title");
@@ -17,16 +19,12 @@ public class Main
 		jf.setVisible(true);
 		
 		
-		System.out.println("working?");
-		
-		//Player p1 = null;
+		//Player p1 = new Player();
 		//p1.setName();
 		//p1.printName();
 		
-		//String filename = "unoDeck.txt";
-		//Deck drawPile;// = null;
-		//drawPile.load(filename);
-		//drawPile.debug();
+		Deck drawPile = new Deck("unoDeck.txt");
+		drawPile.debug();
 		
 	}
 }
