@@ -1,9 +1,6 @@
 import java.util.Scanner;
 
 
-
-
-
 public class Player 
 {
 	static final int MAX_NAME_LENGTH = 9;
