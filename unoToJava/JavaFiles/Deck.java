@@ -70,9 +70,11 @@ public class Deck
 		//input size and create array
 		m_size = readNextInt(f);
 		m_data = new card[m_size];
-		
+
+				
 		for(int r = 0; r < m_data.length; ++r)
 		{
+			m_data[r] = new card();
 			//input type, color, and quantity
 			m_data[r].m_type = (char) ignoreEndline(f);
 			m_data[r].m_color = (char) ignoreEndline(f);
@@ -80,6 +82,7 @@ public class Deck
 			
 			//add the numb of cards to the total
 			m_numOfCards += m_data[r].m_quantity;
+			
 		}
 		
 	}
