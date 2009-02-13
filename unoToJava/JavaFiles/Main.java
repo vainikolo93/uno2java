@@ -4,7 +4,6 @@ import javax.swing.JFrame;
 public class Main 
 {
 	//@SuppressWarnings("null")
-	@SuppressWarnings("null")
 	public static void main(String[] args)
 	{
 
