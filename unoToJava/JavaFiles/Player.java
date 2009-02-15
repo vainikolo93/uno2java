@@ -24,12 +24,14 @@ public class Player
 		m_score = 0;
 		m_name = null;
 		uno = false;
-		m_hand.load(other);
+		//m_hand.load(other);
+		m_hand = new Deck(other);
 	}
 	//load player data
 	public void load(Deck other)
 	{
-		m_hand.load(other);
+		//m_hand.load(other);
+		m_hand = new Deck(other);
 	}
 	//input and set the player name
 	public void setName()

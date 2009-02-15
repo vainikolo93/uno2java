@@ -43,6 +43,8 @@ public class Deck
 		m_data = new card[other.m_data.length];
 		for(int r = 0; r < m_data.length; ++r)
 		{
+			//create each card
+			m_data[r] = new card();
 			//make sure the new deck is empty
 			m_data[r].m_type = '0';
 			m_data[r].m_color = '0';
@@ -74,11 +76,12 @@ public class Deck
 				
 		for(int r = 0; r < m_data.length; ++r)
 		{
+			//create each card
 			m_data[r] = new card();
 			//input type, color, and quantity
 			m_data[r].m_type = (char) ignoreEndline(f);
 			m_data[r].m_color = (char) ignoreEndline(f);
-			m_data[r].m_quantity = ignoreEndline(f);
+			m_data[r].m_quantity = readNextInt(f);//ignoreEndline(f);
 			
 			//add the numb of cards to the total
 			m_numOfCards += m_data[r].m_quantity;
@@ -265,11 +268,10 @@ public class Deck
 	}
 	//after a card's quantity is reduced to zero
 	//this function moves it to the end of the array
-	@SuppressWarnings("null")
 	public void moveToEnd(int loc)
 	{
 		//save current type and color
-		card temp = null;
+		card temp = new card();
 		temp.m_type = m_data[loc].m_type;
 		temp.m_color = m_data[loc].m_color;
 		
