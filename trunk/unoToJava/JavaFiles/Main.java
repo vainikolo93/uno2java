@@ -23,8 +23,11 @@ public class Main
 		//p1.setName();
 		//p1.printName();
 		
-		Deck drawPile = new Deck("unoDeck.txt");
-		drawPile.debug();
+		//Deck drawPile = new Deck("unoDeck.txt");
+		//drawPile.debug();
+		
+		Game g = new Game(5, "unoDeck.txt");
+		g.setup();
 		
 	}
 }
