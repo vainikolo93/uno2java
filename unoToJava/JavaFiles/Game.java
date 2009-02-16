@@ -1,12 +1,20 @@
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.Random;
+import java.awt.Graphics;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 
 
@@ -36,6 +44,7 @@ public class Game extends JFrame implements ActionListener
 	private boolean m_wantsToQuit;
 	private boolean unoCalled, unoFailed;
 	int m_round;
+	private JFrame jf;
 	
 	//default constructor
 	public Game()
@@ -835,14 +844,81 @@ public class Game extends JFrame implements ActionListener
 	public void draw()
 	{
 		
+		
 	}
 	
-	public void gamesetupdraw()
+	private void drawHand()
+	{
+
+		JPanel buttons = new JPanel();
+		
+		Player player = m_playerList[m_currentPlayer];
+		JButton cards[] = new JButton[player.getHand().getSize()];
+		int i=0;
+		for(i=0; i<player.getHand().getSize(); ++i)
+		{
+			cards[i] = new JButton("" + player.getHand().getColorAt(i) 
+					+ " " + player.getHand().getTypeAt(i));
+			switch(player.getHand().getColorAt(i))
+			{
+			case 'B':	cards[i].setBackground(new Color(0, 0, 255));	
+						cards[i].setForeground(new Color(0, 0, 0));	break;
+			case 'R':	cards[i].setBackground(new Color(255, 0, 0));	
+						cards[i].setForeground(new Color(0, 0, 0));	break;
+			case 'G':	cards[i].setBackground(new Color(0, 255, 0));	
+						cards[i].setForeground(new Color(0, 0, 0));	break;
+			case 'Y':	cards[i].setBackground(new Color(255, 255, 0));	
+						cards[i].setForeground(new Color(0, 0, 0));	break;
+			case 'W':	cards[i].setBackground(new Color(0, 0, 0));	
+						cards[i].setForeground(new Color(255, 255, 255));	break;
+			}
+			cards[i].addActionListener(this);
+			cards[i].setPreferredSize(new Dimension(75, 20));
+			buttons.add(cards[i]);
+		}
+		buttons.setLayout(new BoxLayout(buttons, 1));
+		
+		for(i=0; i<player.getHand().getSize(); ++i)
+		{
+			currentCard = i;
+			cards[i].setAction(
+					new AbstractAction("" + player.getHand().getColorAt(i) 
+					+ " " + player.getHand().getTypeAt(i)){
+						public void actionPerformed(ActionEvent e) {
+							if(isCardLegal(currentCard))
+							{
+								//play card function here
+								System.out.print("picked a good card!\n");
+							}
+							else
+							{
+
+								System.out.print("picked a bad card!\n");
+							}
+						}
+					}
+			);
+		}
+		
+		jf.getContentPane().add(buttons);
+	}
+	private int currentCard;
+	public void gamesetupdraw(Game g)
 	{
 		//http://chortle.ccsu.edu/CS151/Notes/chap58/ch58_13.html
+		
+		jf = new JFrame("title");
+		jf.setSize(1000, 600);
+		NeatWindow n = new NeatWindow(this);
+		
+		
+		drawHand();
+		
+		
+
+		jf.getContentPane().setLayout(new FlowLayout());
+		
 		JButton playerb2, playerb3, playerb4, playerb5, playerb6, playerb7, playerb8, playerb9, playerb10;
-		JFrame jf = new JFrame("title");
-		jf.setSize(400, 200);
 		playerb2 = new JButton("2");
 		playerb3 = new JButton("3");
 		playerb4 = new JButton("4");
@@ -853,10 +929,16 @@ public class Game extends JFrame implements ActionListener
 		playerb9 = new JButton("9");
 		playerb10 = new JButton("10");
 		
-		NeatWindow n = new NeatWindow(this);
-		jf.getContentPane().setLayout(new FlowLayout());
 		
-		playerb2.addActionListener( this);
+		playerb2.setAction(
+				new AbstractAction("2"){
+					public void actionPerformed(ActionEvent e) {
+						draw();
+					}
+				}
+		);
+		
+		playerb2.addActionListener( this );
 		playerb3.addActionListener( this );
 		playerb4.addActionListener( this );
 		playerb5.addActionListener( this );
@@ -865,7 +947,6 @@ public class Game extends JFrame implements ActionListener
 		playerb8.addActionListener( this );
 		playerb9.addActionListener( this );
 		playerb10.addActionListener( this );
-		
 		
 		jf.getContentPane().add(n);
 		jf.getContentPane().add( playerb2 );
@@ -882,9 +963,9 @@ public class Game extends JFrame implements ActionListener
 		jf.addKeyListener(n);
 		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		jf.setVisible(true);
-		
-		
 	}
+	
+	
 	
 	/**
 	 * "#defines"
@@ -935,7 +1016,5 @@ public class Game extends JFrame implements ActionListener
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
 }
