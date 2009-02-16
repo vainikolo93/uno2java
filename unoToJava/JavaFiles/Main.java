@@ -1,24 +1,27 @@
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 
+import com.sun.org.apache.xalan.internal.xsltc.compiler.FlowList;
 
-public class Main 
+
+public class Main
 {
 	//@SuppressWarnings("null")
-	public static void main(String[] args) throws IOException
+	public static void main(String[] args) throws IOException 
 	{
 
-		JFrame jf = new JFrame("title");
-		jf.setSize(400, 200);
+		
+		
 		Game g = new Game(5, "unoDeck.txt");
 		g.setup();
-		NeatWindow n = new NeatWindow(g);
-		jf.getContentPane().add(n);
-		// need to be very specific about key listening...
-		jf.addKeyListener(n);
-		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		jf.setVisible(true);
+		g.gamesetupdraw();
+		
+		
 		
 		
 		//Player p1 = new Player();
@@ -32,4 +35,5 @@ public class Main
 		//g.setup();
 		
 	}
+
 }
