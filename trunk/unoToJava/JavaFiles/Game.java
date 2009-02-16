@@ -1,6 +1,12 @@
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.Random;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
 
 
 
@@ -13,7 +19,8 @@ class cursor
 	int m_lookAt;
 }
 
-public class Game 
+@SuppressWarnings("serial")
+public class Game extends JFrame implements ActionListener
 {	
 	private Deck m_drawDeck, m_discardPile;
 	private Player[] m_playerList;
@@ -46,14 +53,7 @@ public class Game
 	//constructor that loads based off predefined player count and file name
 	public Game(int a_playerCount, String a_filename) throws IOException
 	{
-		m_playerCount = m_currentPlayer = -1;
-		m_input = '0';
-		m_wildColor = '0';
-		m_round = 0;
-		hasDrawn = cursorLocked = cardPlayed = skipEffect = false;
-		wildSelect = true;
-		m_wantsToQuit = false;
-		unoCalled = unoFailed = false;
+		this();
 		
 		load(a_playerCount, a_filename);
 	}
@@ -832,7 +832,59 @@ public class Game
 		return true;
 	}
 	
+	public void draw()
+	{
+		
+	}
 	
+	public void gamesetupdraw()
+	{
+		//http://chortle.ccsu.edu/CS151/Notes/chap58/ch58_13.html
+		JButton playerb2, playerb3, playerb4, playerb5, playerb6, playerb7, playerb8, playerb9, playerb10;
+		JFrame jf = new JFrame("title");
+		jf.setSize(400, 200);
+		playerb2 = new JButton("2");
+		playerb3 = new JButton("3");
+		playerb4 = new JButton("4");
+		playerb5 = new JButton("5");
+		playerb6 = new JButton("6");
+		playerb7 = new JButton("7");
+		playerb8 = new JButton("8");
+		playerb9 = new JButton("9");
+		playerb10 = new JButton("10");
+		
+		NeatWindow n = new NeatWindow(this);
+		jf.getContentPane().setLayout(new FlowLayout());
+		
+		playerb2.addActionListener( this);
+		playerb3.addActionListener( this );
+		playerb4.addActionListener( this );
+		playerb5.addActionListener( this );
+		playerb6.addActionListener( this );
+		playerb7.addActionListener( this );
+		playerb8.addActionListener( this );
+		playerb9.addActionListener( this );
+		playerb10.addActionListener( this );
+		
+		
+		jf.getContentPane().add(n);
+		jf.getContentPane().add( playerb2 );
+		jf.getContentPane().add( playerb3 );
+		jf.getContentPane().add( playerb4 );
+		jf.getContentPane().add( playerb5 );
+		jf.getContentPane().add( playerb6 );
+		jf.getContentPane().add( playerb7 );
+		jf.getContentPane().add( playerb8 );
+		jf.getContentPane().add( playerb9 );
+		jf.getContentPane().add( playerb10 );
+		
+		// need to be very specific about key listening...
+		jf.addKeyListener(n);
+		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		jf.setVisible(true);
+		
+		
+	}
 	
 	/**
 	 * "#defines"
@@ -880,4 +932,10 @@ public class Game
 	static final int SCORE_SEVEN = 7;
 	static final int SCORE_EIGHT = 8;
 	static final int SCORE_NINE = 9;
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
 }
