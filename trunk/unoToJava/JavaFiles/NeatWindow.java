@@ -1,3 +1,4 @@
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
@@ -14,6 +15,11 @@ public class NeatWindow extends JPanel implements MouseListener, KeyListener
 	Font m_font;
 	//the game that starts the interface
 	Game m_parent;
+	
+	public Dimension getPreferredSize()
+	{
+		return new Dimension(200, 200);
+	}
 	
 	public NeatWindow(Game a_parent)
 	{
@@ -32,6 +38,7 @@ public class NeatWindow extends JPanel implements MouseListener, KeyListener
 		super.paintComponent(g);
 		//TODO add Game.draw()
 		//m_parent.draw(g);
+		g.fillRect(10, 10, 100, 100);
 	}
 
 	@Override
