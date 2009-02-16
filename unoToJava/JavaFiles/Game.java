@@ -1,3 +1,4 @@
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.Random;
 
@@ -177,13 +178,158 @@ public class Game
 	//TODO loadMasks()
 	
 	//TODO handleInput()
+	//hanles input
+	public void handleInput(KeyEvent e)
+	{
+		switch(e.getKeyChar())
+		{
+			//quit
+		case 'q': m_wantsToQuit = true; break;  
+
+		case ' ': //space bar
+		case 'w':
+		case 'a':
+		case 's':
+		case 'd':
+		case '\r': //enter
+		case 'p':
+		case 'u':
+		case 'x':
+		case 'm':
+		case '1': 
+		case '2': 
+		case '3': 
+		case '4':
+			m_input = e.getKeyChar(); processGameLogic(); break;
+		}
+		
+	}
 	
 	//TODO CURSOR setCursorLimit(), moveCursor(), lockCursorToDrawnCard()
 	
 	//add the card the cursor is pointing to, to the pile
 	//TODO ADD CARD addSelectedCardToPile()
 	
-	//TODO processGameLogic(), subs
+	//process input
+	public void processGameLogic()
+	{
+		if(m_input != '0')
+		{
+			if(m_gamestate == STATE_PLAY)
+			{
+				processGamePlay();
+			}
+			else if(m_gamestate == STATE_WILD_SELECT)
+			{
+				processGameWild();
+			}
+			else if(m_gamestate == STATE_HOT_SEAT
+					|| m_gamestate == STATE_MENU)
+			{
+				//space bar exits both these states
+				//and resumes game play
+				if(m_input == ' ')
+				{
+					m_gamestate = STATE_PLAY;
+					//TODO CLEAR AREA
+				}
+			}
+			else if(m_gamestate == STATE_ROUND_OVER)
+			{
+				//space bar reloads the game for the next round
+				if(m_input == ' ')
+				{
+					reload();
+				}
+			}
+			m_input = '0';
+		}
+		
+		clearUnos(); //clear any old UNOs
+	}
+	//process input for when the game is in play state
+	public void processGamePlay()
+	{
+		switch(m_input)
+		{
+		//space bar
+		case ' ': 
+			//if player has not drawn yet this turn
+			//and they have not played a card
+			if(!hasDrawn && !cardPlayed && okayToAddCard(m_currentPlayer))
+			{
+				m_drawDeck.drawCard(m_playerList[m_currentPlayer].getHand());
+				hasDrawn = true;
+				//TODO REMOVE THIS DEBUG
+				m_playerList[m_currentPlayer].getHand().debug();
+				//TODO CURSOR
+				//lock cursor to last card
+				//lockCursorToDrawnCard();
+				
+			}
+			break;
+		//TODO CURSOR
+		//case 'w': moveCursor(MOVE_UP, num); break;
+		//case 's': moveCursor(MOVE_DOWN, num); break;
+		//case 'a': moveCursor(MOVE_LEFT, num); break;
+		//case 'd': moveCursor(MOVE_RIGHT, num); break;
+		//TODO ADD CARD
+		//case '\r': addSelectedCardToPile(); break;
+		//pass / end turn
+		case 'p': endTurn(); break;
+		case 'u': callUno(); break;	
+		case 'x': failureToCallUno(); break;
+		case 'm': m_gamestate = STATE_MENU; break;
+		}
+	}
+	//process input for when the game is in wild state
+	public void processGameWild()
+	{
+		if(wildSelect)
+		{
+			//only when on the wild selection screen
+			switch(m_input)
+			{
+			case '1': //blue
+				m_wildColor = 'B';			//set color
+				m_gamestate = STATE_PLAY;	//resume game play
+				break;
+			case '2': //green
+				m_wildColor = 'G';
+				m_gamestate = STATE_PLAY;
+				break;
+			case '3': //red
+				m_wildColor = 'R';
+				m_gamestate = STATE_PLAY;
+				break;
+			case '4': //yellow
+				m_wildColor = 'Y';
+				m_gamestate = STATE_PLAY;
+				break;
+			case ' '://toggle view
+				wildSelect = false;
+				//clear the area
+				//TODO CLEAR
+				//clearArea(COLOR_WHITE, PLAYER_HAND_X-1, SCREEN_WIDTH-2, PLAYER_HAND_Y, SCREEN_HEIGHT-2);
+				break;
+			}
+		}
+		else if(m_input == ' ')
+		{
+			wildSelect = true;
+			//clear the area
+			//TODO CLEAR
+			//clearArea(COLOR_WHITE, PLAYER_HAND_X-1, SCREEN_WIDTH-2, PLAYER_HAND_Y, SCREEN_HEIGHT-2);
+		}
+
+		//if the state has been changed
+		if(m_gamestate == STATE_PLAY)
+		{
+			//clear the area
+			//TODO CLEAR
+			//clearArea(COLOR_WHITE, PLAYER_HAND_X-1, SCREEN_WIDTH-2, PLAYER_HAND_Y, SCREEN_HEIGHT-2);
+		}
+	}
 	
 	//check to make sure the card is legal to play
 	public boolean isCardLegal(int card)
@@ -308,7 +454,6 @@ public class Game
 		}
 	}
 	//set the next player
-	//set the next player
 	public void calcNextPlayer()
 	{
 		if(m_direction == FORWARD)
@@ -328,8 +473,6 @@ public class Game
 		}
 	}
 	//deal penalties
-	
-	//deal penalties
 	public void penalty(int player)
 	{
 		//draw cards
@@ -342,7 +485,6 @@ public class Game
 		//TODO CURSOR
 		//setCursorLimits(m_playerList[m_currentPlayer].getHand().getNumOfCards());
 	}
-	//a player calls uno when they have one card left in their hand
 	//a player calls uno when they have one card left in their hand
 	public void callUno()
 	{
@@ -362,7 +504,6 @@ public class Game
 		}
 	}
 	//a player calls that another player has failed to call uno
-	//a player calls than another player has failed to call uno
 	public void failureToCallUno()
 	{
 		if(!unoFailed)//this way the can only call failure to call UNO
@@ -395,12 +536,10 @@ public class Game
 		}
 	}
 	//returns if the player wants to quit
-	//returns if the player wants to quit
 	public boolean wantsToQuit()
 	{
 		return m_wantsToQuit;
 	}
-	//after the player ends their turn
 	//after the player ends their turn
 	public void endTurn()
 	{
@@ -430,7 +569,6 @@ public class Game
 		//setCursorLimits(m_playerList[m_currentPlayer].getHand().getNumOfCards());
 	}
 	//clear any old UNO flags
-	//clear any old UNO flags
 	public void clearUnos()
 	{
 		for(int i = 0; i < m_playerCount; ++i)
@@ -444,7 +582,6 @@ public class Game
 			}
 		}
 	}
-	//calculate if the current player has won
 	//calculate if the current player has won
 	public boolean calcWin()
 	{
@@ -469,7 +606,6 @@ public class Game
 		return false; //round continues
 	}
 	//calculates and returns the score for the round
-	//calculate and returns the score for the round
 	public int calcScore()
 	{
 		int total = 0;
@@ -497,7 +633,6 @@ public class Game
 		return total;
 	}
 	//calculates and returns the score for each individual card
-	//calculates and returns the score for each individual card
 	public int scoreChart(char color, char type)
 	{
 		if(color == 'W')
@@ -524,7 +659,6 @@ public class Game
 		}
 		return 0; //default
 	}
-	//reloads the game for the next round
 	//reloads the game for the next round
 	public void reload()
 	{
@@ -586,7 +720,6 @@ public class Game
 		//setCursorLimits(m_playerList[m_currentPlayer].getHand().getNumOfCards());
 	}
 	//set the effect for the initial card in the pile
-	//set the effect for the initial card in the pile
 	public void setInitEffect(char type, char color) 
 	{
 		//look for wilds first
@@ -619,7 +752,6 @@ public class Game
 			
 		}
 	}
-	//set the effect for the last card played in a round
 	//set the effect for the last card played in a round
 	public void setEndEffect(char type, char color)
 	{
@@ -656,7 +788,6 @@ public class Game
 		}
 	}
 	//make sure it is okay to add a card before it is placed into a player's hand
-	//make sure its okay to add a card before it is played into a players hand
 	public boolean okayToAddCard(int player)
 	{
 		//must limit the number of cards in a players hand, otherwise, they go
