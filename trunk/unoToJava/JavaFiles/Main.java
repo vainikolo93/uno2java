@@ -19,7 +19,7 @@ public class Main
 		
 		Game g = new Game(5, "unoDeck.txt");
 		g.setup();
-		g.gamesetupdraw(g);
+		g.gamesetupdraw();
 		
 		
 		
