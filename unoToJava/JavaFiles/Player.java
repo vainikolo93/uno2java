@@ -55,6 +55,13 @@ public class Player
 			m_name = new String(tempElements);
 		}
 	}
+	
+	public void setNameBetter(String a_n)
+	{
+		
+		
+	}
+	
 	//print the player name
 	public void printName()
 	{

@@ -1,20 +1,21 @@
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.Random;
-import java.awt.Graphics;
 
 import javax.swing.AbstractAction;
-import javax.swing.Action;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.JTextPane;
 
 
 
@@ -44,7 +45,8 @@ public class Game extends JFrame implements ActionListener
 	private boolean m_wantsToQuit;
 	private boolean unoCalled, unoFailed;
 	int m_round;
-	private JFrame jf;
+	JFrame jf = new JFrame("title");
+	
 	
 	//default constructor
 	public Game()
@@ -843,6 +845,36 @@ public class Game extends JFrame implements ActionListener
 	
 	public void draw()
 	{
+		jf.repaint();
+		
+	}
+	
+	public void gamesetupdraw()
+	{
+		//http://chortle.ccsu.edu/CS151/Notes/chap58/ch58_13.html
+		JButton playerb[] = new JButton[9];
+		jf.setSize(400, 200);
+		int buttonnum = 2;
+		for(int i = 0; i < 9; ++i)
+		{
+		playerb[i] = new JButton(" " + buttonnum);
+		playerb[i].addActionListener( this);
+		jf.getContentPane().add( playerb[i] );
+		buttonnum++;
+	
+		}
+		
+		NeatWindow n = new NeatWindow(this);
+		jf.getContentPane().setLayout(new FlowLayout());
+			
+		jf.getContentPane().add(n);
+		
+		
+		// need to be very specific about key listening...
+		jf.addKeyListener(n);
+		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		jf.setVisible(true);
+		
 		
 		
 	}
@@ -903,69 +935,58 @@ public class Game extends JFrame implements ActionListener
 		jf.getContentPane().add(buttons);
 	}
 	private int currentCard;
-	public void gamesetupdraw(Game g)
+	
+	@Override
+	public void actionPerformed(ActionEvent e)
 	{
-		//http://chortle.ccsu.edu/CS151/Notes/chap58/ch58_13.html
+		 String str = e.getActionCommand();
+		 
+		if (str.equals(" 2")){ m_playerCount = 2; System.out.println("2222222");}
+		else if (str.equals(" 3")){ m_playerCount = 3;}
+		else if (str.equals(" 4")){ m_playerCount = 4;}
+		else if (str.equals(" 5")){ m_playerCount = 5;}
+		else if (str.equals(" 6")){ m_playerCount = 6;}
+		else if (str.equals(" 7")){ m_playerCount = 7;}
+		else if (str.equals(" 8")){ m_playerCount = 8;}
+		else if (str.equals(" 9")){ m_playerCount = 9;}
+		else if (str.equals(" 10")){ m_playerCount = 10;}
+		 
+		jf.getContentPane().removeAll();
+		jf.repaint();
+
+		//http://leepoint.net/notes-java/GUI/components/30textfield/11textfield.html
+		JTextField textnamebox = new JTextField(10);
+		jf.getContentPane().add(textnamebox);
 		
-		jf = new JFrame("title");
-		jf.setSize(1000, 600);
-		NeatWindow n = new NeatWindow(this);
+		textnamebox.addActionListener(
+			new ActionListener()
+			{
+		        public void actionPerformed(ActionEvent e)
+		        {
+		        	for(int i = 0; i < m_playerCount; ++i)
+		    		{
+		        		//m_playerList[0].setNameBetter(getText());
+		        		m_playerList[0].printName();
+			        	jf.repaint();
+			            //TODO
+		    		}
+		        }
+		    });
+		
+		m_playerList[0].setNameBetter(textnamebox.getText());
+		
+		m_playerList[0].printName();
+		
+		jf.repaint();
+		 
+		//System.out.println(m_playerCount);
+		//draw();
+		//System.out.println(str);
+		//System.out.println("I pushed a button");
 		
 		
 		drawHand();
-		
-		
-
-		jf.getContentPane().setLayout(new FlowLayout());
-		
-		JButton playerb2, playerb3, playerb4, playerb5, playerb6, playerb7, playerb8, playerb9, playerb10;
-		playerb2 = new JButton("2");
-		playerb3 = new JButton("3");
-		playerb4 = new JButton("4");
-		playerb5 = new JButton("5");
-		playerb6 = new JButton("6");
-		playerb7 = new JButton("7");
-		playerb8 = new JButton("8");
-		playerb9 = new JButton("9");
-		playerb10 = new JButton("10");
-		
-		
-		playerb2.setAction(
-				new AbstractAction("2"){
-					public void actionPerformed(ActionEvent e) {
-						draw();
-					}
-				}
-		);
-		
-		playerb2.addActionListener( this );
-		playerb3.addActionListener( this );
-		playerb4.addActionListener( this );
-		playerb5.addActionListener( this );
-		playerb6.addActionListener( this );
-		playerb7.addActionListener( this );
-		playerb8.addActionListener( this );
-		playerb9.addActionListener( this );
-		playerb10.addActionListener( this );
-		
-		jf.getContentPane().add(n);
-		jf.getContentPane().add( playerb2 );
-		jf.getContentPane().add( playerb3 );
-		jf.getContentPane().add( playerb4 );
-		jf.getContentPane().add( playerb5 );
-		jf.getContentPane().add( playerb6 );
-		jf.getContentPane().add( playerb7 );
-		jf.getContentPane().add( playerb8 );
-		jf.getContentPane().add( playerb9 );
-		jf.getContentPane().add( playerb10 );
-		
-		// need to be very specific about key listening...
-		jf.addKeyListener(n);
-		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		jf.setVisible(true);
 	}
-	
-	
 	
 	/**
 	 * "#defines"
@@ -1014,7 +1035,5 @@ public class Game extends JFrame implements ActionListener
 	static final int SCORE_EIGHT = 8;
 	static final int SCORE_NINE = 9;
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-	}
+	
 }
