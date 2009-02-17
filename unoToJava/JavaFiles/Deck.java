@@ -1,3 +1,4 @@
+
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -62,9 +63,130 @@ public class Deck
 			load(f);
 		} catch (Exception e)
 		{
+			//ugly fail safe
+			//loadMcNasty();
 			return false;
 		}
 		return true;
+	}
+	
+	//if for some reason, java cannot load the file, hard code the deck
+	//REALLY BAD!!!!!
+	public void loadMcNasty() 
+	{
+		// TODO Auto-generated method stub
+		m_size = 54;
+		m_data = new card[m_size];
+		
+		for(int i = 0; i < m_size; ++i)
+		{
+			//create new card
+			m_data[i] = new card();
+			//set types
+			if(i == 0 || i == 13 || i == 26 || i == 39)
+			{
+				m_data[i].m_type = '0';
+				m_data[i].m_quantity = 1;
+			}
+			else if(i == 1 || i == 14 || i == 27 || i == 40)
+			{
+				m_data[i].m_type = '1';
+				m_data[i].m_quantity = 2;
+			}
+			else if(i == 2 || i == 15 || i == 28 || i == 41)
+			{
+				m_data[i].m_type = '2';
+				m_data[i].m_quantity = 2;
+			}
+			else if(i == 3 || i == 16 || i == 29 || i == 42)
+			{
+				m_data[i].m_type = '3';
+				m_data[i].m_quantity = 2;
+			}
+			else if(i == 4 || i == 17 || i == 30 || i == 43)
+			{
+				m_data[i].m_type = '4';
+				m_data[i].m_quantity = 2;
+			}
+			else if(i == 5 || i == 18 || i == 31 || i == 44)
+			{
+				m_data[i].m_type = '5';
+				m_data[i].m_quantity = 2;
+			}
+			else if(i == 6 || i == 19 || i == 32 || i == 45)
+			{
+				m_data[i].m_type = '6';
+				m_data[i].m_quantity = 2;
+			}
+			else if(i == 7 || i == 20 || i == 33 || i == 46)
+			{
+				m_data[i].m_type = '7';
+				m_data[i].m_quantity = 2;
+			}
+			else if(i == 8 || i == 21 || i == 34 || i == 47)
+			{
+				m_data[i].m_type = '8';
+				m_data[i].m_quantity = 2;
+			}
+			else if(i == 9 || i == 22 || i == 35 || i == 48)
+			{
+				m_data[i].m_type = '9';
+				m_data[i].m_quantity = 2;
+			}
+			else if(i == 10 || i == 23 || i == 36 || i == 49)
+			{
+				m_data[i].m_type = 'D';
+				m_data[i].m_quantity = 2;
+			}
+			else if(i == 11 || i == 24 || i == 37 || i == 50)
+			{
+				m_data[i].m_type = 'R';
+				m_data[i].m_quantity = 2;
+			}
+			else if(i == 12 || i == 25 || i == 38 || i == 51)
+			{
+				m_data[i].m_type = 'S';
+				m_data[i].m_quantity = 2;
+			}
+			else if(i == 52)
+			{
+				m_data[i].m_type = '0';
+				m_data[i].m_quantity = 4;
+			}
+			else if(i == 53)
+			{
+				m_data[i].m_type = '4';
+				m_data[i].m_quantity = 4;
+			}
+			
+			//set color
+			if(i < 13)
+			{
+				m_data[i].m_color = 'B';
+			}
+			else if(i < 26)
+			{
+				m_data[i].m_color = 'G';
+			}
+			else if(i < 39)
+			{
+				m_data[i].m_color = 'R';
+			}
+			else if(i < 52)
+			{
+				m_data[i].m_color = 'Y';
+			}
+			else
+			{
+				m_data[i].m_color = 'W';
+			}
+			
+			//update total card quantity
+			m_numOfCards += m_data[i].m_quantity;
+		}
+		
+		
+		
 	}
 	//load the deck from file
 	public void load(InputStreamReader f) throws IOException

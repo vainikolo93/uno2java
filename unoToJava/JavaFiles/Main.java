@@ -1,12 +1,6 @@
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
 
-import com.sun.org.apache.xalan.internal.xsltc.compiler.FlowList;
 
 
 public class Main
@@ -17,9 +11,22 @@ public class Main
 
 		
 		
-		Game g = new Game(5, "unoDeck.txt");
-		g.setup();
-		g.gamesetupdraw();
+		//Game g = new Game(5, "unoDeck.txt");
+		//g.setup();
+
+		//jf.getContentPane().add(g.getUI());
+		//jf.addKeyListener(g.getUI());
+		//GameApplet app = new GameApplet(g);
+		//jf.getContentPane().add(g.getGame().getUI());
+		// need to be very specific about key listening...
+		//jf.addKeyListener(g.getGame().getUI());
+		//jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//jf.setVisible(true);
+
+		//g.gamesetupdraw();
+
+		//g.paint();
+		//g.draw();
 		
 		
 		
