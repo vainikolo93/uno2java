@@ -1,9 +1,13 @@
+
+import java.awt.Graphics;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.Random;
@@ -60,6 +64,8 @@ public class Game extends JFrame implements ActionListener
 		m_wantsToQuit = false;
 		unoCalled = unoFailed = false;
 		
+		m_ui = new NeatWindow(this); //the UI for this game
+		
 	}
 	//constructor that loads based off predefined player count and file name
 	public Game(int a_playerCount, String a_filename) throws IOException
@@ -71,14 +77,7 @@ public class Game extends JFrame implements ActionListener
 	//constructor that loads based off predefined  file name
 	public Game(String a_filename) throws IOException
 	{
-		m_playerCount = m_currentPlayer = -1;
-		m_input = '0';
-		m_wildColor = '0';
-		m_round = 0;
-		hasDrawn = cursorLocked = cardPlayed = skipEffect = false;
-		wildSelect = true;
-		m_wantsToQuit = false;
-		unoCalled = unoFailed = false;
+		this();
 		
 		load(a_filename);
 	}
@@ -189,8 +188,9 @@ public class Game extends JFrame implements ActionListener
 	//TODO loadMasks()
 	
 	//TODO handleInput()
-	//hanles input
+	//handles input
 	public void handleInput(KeyEvent e)
+	//public void keyPressed(KeyEvent e)
 	{
 		switch(e.getKeyChar())
 		{
@@ -843,12 +843,45 @@ public class Game extends JFrame implements ActionListener
 		return true;
 	}
 	
-	public void draw()
+
+	//new functions to run the game in an applet
+	NeatWindow m_ui; //display the object and user interface
+
+	public void draw(Graphics g)
 	{
 		jf.repaint();
 		
 	}
-	
+
+	public NeatWindow getUI()
+	{
+		return m_ui;
+	}
+	/*public void draw(Graphics g)
+	{
+		System.out.println("Testing");
+		g.drawString("Testing", 10, 10);
+		int xx = m_playerList[m_currentPlayer].getHand().getLastCard();
+		g.drawString("Last Card" + xx, 10, 20);
+	}*/
+	//fail safe
+	public Game(int a_playerCount)
+	{
+		this();
+		
+		m_playerCount = a_playerCount;
+		
+		m_drawDeck = new Deck();
+		m_drawDeck.loadMcNasty();
+		m_discardPile = new Deck(m_drawDeck);
+		m_playerList = new Player [m_playerCount];
+		
+		for(int n = 0; n < m_playerCount; ++n)
+		{
+			m_playerList[n] = new Player(m_drawDeck);
+		}
+	}
+
 	public void gamesetupdraw()
 	{
 		//http://chortle.ccsu.edu/CS151/Notes/chap58/ch58_13.html
@@ -861,17 +894,15 @@ public class Game extends JFrame implements ActionListener
 		playerb[i].addActionListener( this);
 		jf.getContentPane().add( playerb[i] );
 		buttonnum++;
-	
 		}
 		
-		NeatWindow n = new NeatWindow(this);
 		jf.getContentPane().setLayout(new FlowLayout());
 			
-		jf.getContentPane().add(n);
+		jf.getContentPane().add(m_ui);
 		
 		
 		// need to be very specific about key listening...
-		jf.addKeyListener(n);
+		jf.addKeyListener(m_ui);
 		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		jf.setVisible(true);
 		
@@ -988,6 +1019,7 @@ public class Game extends JFrame implements ActionListener
 		drawHand();
 	}
 	
+
 	/**
 	 * "#defines"
 	 * we don't like magic numbers

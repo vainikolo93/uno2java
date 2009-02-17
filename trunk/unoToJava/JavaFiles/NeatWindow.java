@@ -11,6 +11,10 @@ import javax.swing.JPanel;
 
 public class NeatWindow extends JPanel implements MouseListener, KeyListener
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	//the font we want to draw in
 	Font m_font;
 	//the game that starts the interface
@@ -37,13 +41,15 @@ public class NeatWindow extends JPanel implements MouseListener, KeyListener
 		//super allows you to override a parent class
 		super.paintComponent(g);
 		//TODO add Game.draw()
-		//m_parent.draw(g);
+		m_parent.draw(g);
 		g.fillRect(10, 10, 100, 100);
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
 		// TODO Auto-generated method stub
+		System.out.println("Clicked");
+		repaint();
 		
 	}
 
@@ -62,6 +68,8 @@ public class NeatWindow extends JPanel implements MouseListener, KeyListener
 	@Override
 	public void mousePressed(MouseEvent e) {
 		// TODO Auto-generated method stub
+		System.out.println("preSSed");
+		repaint();
 		
 	}
 
@@ -74,7 +82,6 @@ public class NeatWindow extends JPanel implements MouseListener, KeyListener
 	@Override
 	public void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
