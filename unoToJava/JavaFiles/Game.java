@@ -85,16 +85,16 @@ public class Game extends JFrame implements ActionListener
 	//loads based off a predefined player count and file name
 	public void load(int a_playerCount, String a_filename) throws IOException
 	{
-		m_playerCount = a_playerCount;
+		//m_playerCount = a_playerCount;
 		
 		m_drawDeck = new Deck(a_filename);
 		m_discardPile = new Deck(m_drawDeck);
-		m_playerList = new Player [m_playerCount];
+		//m_playerList = new Player [m_playerCount];
 		
-		for(int n = 0; n < m_playerCount; ++n)
-		{
-			m_playerList[n] = new Player(m_drawDeck);
-		}
+		//for(int n = 0; n < m_playerCount; ++n)
+		//{
+		//	m_playerList[n] = new Player(m_drawDeck);
+		//}
 	}
 	//determines player count
 	//loads off a predefined filename
@@ -185,7 +185,79 @@ public class Game extends JFrame implements ActionListener
 				" Card Color: " + c + "\n");
 		
 	}
+	//setup that takes player count as a parameter
+	public void setup(int players)
+	{
+		//set direction of game play
+		m_direction = FORWARD;
+		//set state
+		m_gamestate = STATE_HOT_SEAT;
+		
+		//create players
+		m_playerCount = players;
+		m_playerList = new Player [m_playerCount];
+		
+		for(int n = 0; n < m_playerCount; ++n)
+		{
+			m_playerList[n] = new Player(m_drawDeck);
+		}
+		
+		for(int i = 0; i < m_playerCount; ++i)
+		{
+			//TODO SET PLAYER NAME
+			//printf("Please enter name for Player %d: ", i+1);
+			////read in and set player name
+			//m_playerList[i].setName();
+			//printf("\n");
+			
+			//deal cards
+			for(int n = 0; n < INITIAL_HAND; ++n)
+			{
+				m_drawDeck.drawCard(m_playerList[i].getHand());
+			}
+			//TODO REMOVE THIS DEBUG
+			m_playerList[i].getHand().debug();
+		}
+		
+		//randomly select starting player
+		Random rand = new Random();
+		m_currentPlayer = rand.nextInt(m_playerCount);
+		
+		//draw first card to the discard pile
+		//make sure it is legal
+		//NOTE: It is illegal to start with a wild DRAW 4 card
+		boolean isLegal = false;
+		while (!isLegal)
+		{
+			m_drawDeck.drawCard(m_discardPile);
+			//if it is a Wild Draw 4
+			if(m_discardPile.getTypeAt(m_discardPile.getLastCard()) == '4'
+					&& m_discardPile.getColorAt(m_discardPile.getLastCard()) == 'W')
+			{
+				//not legal
+				//shuffle back into deck
+				m_drawDeck.shuffle(m_discardPile);
+			}
+			else //legal
+			{
+				isLegal = true;
+			}
+		}
+		
+		//after the first card is drawn, set its effect
+		char t = m_discardPile.getTypeAt(m_discardPile.getLastCard());
+		char c = m_discardPile.getColorAt(m_discardPile.getLastCard());
+		setInitEffect(t, c);
+		
+		//TODO Finish cursor limits
+		//m_cursor.m_icon = char(16);
+		//setCursorLimits(m_playerList[m_currentPlayer].getHand().getNumOfCards());
 	
+		//TODO REMOVE THIS DEBUG
+		System.out.println("Starting Player: " + m_currentPlayer + " Card Type: " + t +
+				" Card Color: " + c + "\n");
+		
+	}
 	//TODO loadMasks()
 	
 	//TODO handleInput()
@@ -870,17 +942,17 @@ public class Game extends JFrame implements ActionListener
 	{
 		this();
 		
-		m_playerCount = a_playerCount;
+		//m_playerCount = a_playerCount;
 		
 		m_drawDeck = new Deck();
 		m_drawDeck.loadMcNasty();
 		m_discardPile = new Deck(m_drawDeck);
-		m_playerList = new Player [m_playerCount];
+		//m_playerList = new Player [m_playerCount];
 		
-		for(int n = 0; n < m_playerCount; ++n)
-		{
-			m_playerList[n] = new Player(m_drawDeck);
-		}
+		//for(int n = 0; n < m_playerCount; ++n)
+		//{
+		//	m_playerList[n] = new Player(m_drawDeck);
+		//}
 	}
 
 	public void gamesetupdraw()
