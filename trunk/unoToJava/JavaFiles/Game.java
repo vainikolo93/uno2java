@@ -1,6 +1,7 @@
 
 import java.awt.Graphics;
 
+import java.awt.Button;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -885,6 +886,7 @@ public class Game extends JFrame implements ActionListener
 	public void gamesetupdraw()
 	{
 		//http://chortle.ccsu.edu/CS151/Notes/chap58/ch58_13.html
+		
 		JButton playerb[] = new JButton[9];
 		jf.setSize(400, 200);
 		int buttonnum = 2;
@@ -895,7 +897,6 @@ public class Game extends JFrame implements ActionListener
 		jf.getContentPane().add( playerb[i] );
 		buttonnum++;
 		}
-		
 		jf.getContentPane().setLayout(new FlowLayout());
 			
 		jf.getContentPane().add(m_ui);
