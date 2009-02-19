@@ -22,9 +22,10 @@ public class GameApplet extends Applet
 
 	public void init()
 	{
-
+		
 		playerNumButtons();
 		try {
+			
 			m_game = new Game(5, 
 					"../unoDeck.txt");
 					//f.getAbsolutePath()+"./unoDeck.txt");
@@ -39,6 +40,7 @@ public class GameApplet extends Applet
 		addKeyListener(m_game.getUI());
 		addMouseListener(m_game.getUI());
 
+		m_game.drawHand();
 	}
 	
 	public void paint(Graphics g)

@@ -39,7 +39,7 @@ public class Game extends JFrame implements ActionListener
 	private Deck m_drawDeck, m_discardPile;
 	private Player[] m_playerList;
 	private int m_playerCount;
-	private int m_currentPlayer;
+	public int m_currentPlayer;
 	private Map[] mask;
 	private cursor m_cursor;
 	private int m_direction;
@@ -85,16 +85,18 @@ public class Game extends JFrame implements ActionListener
 	//loads based off a predefined player count and file name
 	public void load(int a_playerCount, String a_filename) throws IOException
 	{
-		//m_playerCount = a_playerCount;
+		m_playerCount = a_playerCount;
 		
 		m_drawDeck = new Deck(a_filename);
 		m_discardPile = new Deck(m_drawDeck);
-		//m_playerList = new Player [m_playerCount];
-		
+		m_playerList = new Player [m_playerCount];
+		m_currentPlayer = 1;
 		//for(int n = 0; n < m_playerCount; ++n)
 		//{
 		//	m_playerList[n] = new Player(m_drawDeck);
 		//}
+		
+		setup(a_playerCount);
 	}
 	//determines player count
 	//loads off a predefined filename
@@ -983,14 +985,24 @@ public class Game extends JFrame implements ActionListener
 		
 	}
 	
-	private void drawHand()
+	public void drawHand()
 	{
 
+		int current = m_discardPile.getLastCard();
+		System.out.print("\n\n\n");
+		System.out.print(m_discardPile.getColorAt(current));
+		System.out.print(" ");
+		System.out.print(m_discardPile.getTypeAt(current));
+		System.out.print("\n");
 		JPanel buttons = new JPanel();
-		
+
 		Player player = m_playerList[m_currentPlayer];
 		JButton cards[] = new JButton[player.getHand().getSize()];
+		
+		
 		int i=0;
+		
+		//sets the color for each card
 		for(i=0; i<player.getHand().getSize(); ++i)
 		{
 			cards[i] = new JButton("" + player.getHand().getColorAt(i) 
@@ -1012,25 +1024,54 @@ public class Game extends JFrame implements ActionListener
 			cards[i].setPreferredSize(new Dimension(75, 20));
 			buttons.add(cards[i]);
 		}
+		
+		//sets the layout
 		buttons.setLayout(new BoxLayout(buttons, 1));
 		
+		//sets the action for each card
 		for(i=0; i<player.getHand().getSize(); ++i)
 		{
 			currentCard = i;
+			
+			//sets the action
 			cards[i].setAction(
 					new AbstractAction("" + player.getHand().getColorAt(i) 
-					+ " " + player.getHand().getTypeAt(i)){
-						public void actionPerformed(ActionEvent e) {
-							if(isCardLegal(currentCard))
+					+ "" + player.getHand().getTypeAt(i))
+					{
+						public void actionPerformed(ActionEvent e) 
+						{
+							
+							
+							String str = e.getActionCommand();
+							int temp = 0;
+							int color = str.charAt(0);
+							int type = str.charAt(1);
+							
+							//finds out which card it is
+							for(int i=0; i<m_playerList[m_currentPlayer].getHand().getSize(); ++i)
+							{
+								if(m_playerList[m_currentPlayer].getHand().getColorAt(i) == color
+								&& m_playerList[m_currentPlayer].getHand().getTypeAt(i) == type)
+								{
+									temp = i;
+									i=m_playerList[m_currentPlayer].getHand().getSize();
+								}
+							}
+							
+							//checks to see if the card is legal
+							if(isCardLegal(new Integer(temp)))
 							{
 								//play card function here
-								System.out.print("picked a good card!\n");
+								System.out.print("Yes, you can play the card at location ");
 							}
 							else
 							{
-
-								System.out.print("picked a bad card!\n");
+								System.out.print("No, you can't play the card at location ");
 							}
+							
+
+							System.out.print(temp);
+							System.out.print("\n");
 						}
 					}
 			);
