@@ -1,7 +1,11 @@
 import java.applet.Applet;
 import java.awt.Button;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Event;
+import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Label;
 import java.io.IOException;
 
 
@@ -18,12 +22,14 @@ public class GameApplet extends Applet
 	Button player[];
 	static final int buttonCount = 9;
 	int numOfPlayers;
+	boolean playerSet = false;
 	
 
 	public void init()
 	{
-		
-		playerNumButtons();
+		this.setSize(new Dimension(700, 400));
+		this.setBackground(new Color(225, 128, 225));
+		this.setFont(new Font("Arial", 0, 18));
 		try {
 			
 			m_game = new Game(5, 
@@ -37,10 +43,9 @@ public class GameApplet extends Applet
 			//locate the text file, we have the deck hard-coded in
 			m_game = new Game(5);
 		}
+		playerNumButtons();
 		addKeyListener(m_game.getUI());
 		addMouseListener(m_game.getUI());
-
-		m_game.drawHand();
 	}
 	
 	public void paint(Graphics g)
@@ -49,13 +54,12 @@ public class GameApplet extends Applet
 	
 	}
 	
-	public Game getGame()
-	{
-		return m_game;
-	}
 	
 	public void playerNumButtons()
 	{
+		Label output_label;
+		output_label = new Label("Select the number of Players:");
+		add(output_label);
 		player = new Button[buttonCount];
 		for(int i = 0; i < buttonCount; ++i)
 		{
@@ -68,11 +72,14 @@ public class GameApplet extends Applet
 	  { 
 		for(int i = 0; i < buttonCount; ++i)
 		{
-			if (e.target == player[i])
+			if (e.target == player[i] && !playerSet)
 		     {  // user has clicked this button
 				numOfPlayers = i +2;
 				System.out.println("WORKED "+ numOfPlayers);
 				m_game.setup(numOfPlayers);
+				removeAll();
+				playerSet = true;
+				m_game.drawHand();
 		     }
 		}
 	    return true;    // Yes, we do need this!
