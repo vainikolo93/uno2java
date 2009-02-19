@@ -96,7 +96,7 @@ public class Game extends JFrame implements ActionListener
 		//	m_playerList[n] = new Player(m_drawDeck);
 		//}
 		
-		setup(a_playerCount);
+
 	}
 	//determines player count
 	//loads off a predefined filename
@@ -993,11 +993,11 @@ public class Game extends JFrame implements ActionListener
 		System.out.print(m_discardPile.getColorAt(current));
 		System.out.print(" ");
 		System.out.print(m_discardPile.getTypeAt(current));
-		System.out.print("\n");
+		System.out.print("\n =)");
 		JPanel buttons = new JPanel();
 
 		Player player = m_playerList[m_currentPlayer];
-		JButton cards[] = new JButton[player.getHand().getSize()];
+		Button cards[] = new Button[player.getHand().getSize()];
 		
 		
 		int i=0;
@@ -1005,7 +1005,7 @@ public class Game extends JFrame implements ActionListener
 		//sets the color for each card
 		for(i=0; i<player.getHand().getSize(); ++i)
 		{
-			cards[i] = new JButton("" + player.getHand().getColorAt(i) 
+			cards[i] = new Button("" + player.getHand().getColorAt(i) 
 					+ " " + player.getHand().getTypeAt(i));
 			switch(player.getHand().getColorAt(i))
 			{
@@ -1027,7 +1027,7 @@ public class Game extends JFrame implements ActionListener
 		
 		//sets the layout
 		buttons.setLayout(new BoxLayout(buttons, 1));
-		
+		/*
 		//sets the action for each card
 		for(i=0; i<player.getHand().getSize(); ++i)
 		{
@@ -1078,6 +1078,7 @@ public class Game extends JFrame implements ActionListener
 		}
 		
 		jf.getContentPane().add(buttons);
+		*/
 	}
 	private int currentCard;
 	
