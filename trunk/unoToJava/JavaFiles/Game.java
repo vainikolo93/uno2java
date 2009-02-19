@@ -97,6 +97,8 @@ public class Game extends JFrame implements ActionListener
 		//}
 		
 
+		//setup(a_playerCount);
+
 	}
 	//determines player count
 	//loads off a predefined filename
@@ -1146,8 +1148,23 @@ public class Game extends JFrame implements ActionListener
 		
 		drawHand();
 	}
-	
 
+	
+	
+	public Deck getDiscardPile()
+	{
+		return m_discardPile;
+	}
+	
+	public Player getPlayer(int index)
+	{
+		return m_playerList[index];
+	}
+	
+	public Player getCurrentPlayer()
+	{
+		return m_playerList[m_currentPlayer];
+	}
 	/**
 	 * "#defines"
 	 * we don't like magic numbers
