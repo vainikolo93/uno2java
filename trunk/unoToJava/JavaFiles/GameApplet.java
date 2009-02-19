@@ -6,11 +6,12 @@ import java.awt.Event;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Label;
+import java.awt.TextField;
 import java.io.IOException;
 
 
 
-public class GameApplet extends Applet
+public class GameApplet extends Applet implements Runnable
 {
 	/**
 	 * 
@@ -20,10 +21,19 @@ public class GameApplet extends Applet
 	
 	Game m_game;
 	Button player[];
+	Label inputLabel;
+	TextField nameBlock;
 	static final int buttonCount = 9;
 	int numOfPlayers;
+
+	String PlayerNames[];
+	int playerCounter = 0;
+	boolean runOnce = true;
+
 	boolean playerSet = false;
+	boolean Setupdone = false;
 	
+
 
 	public void init()
 	{
@@ -46,12 +56,16 @@ public class GameApplet extends Applet
 		playerNumButtons();
 		addKeyListener(m_game.getUI());
 		addMouseListener(m_game.getUI());
+
+		Thread t = new Thread(this);
+		t.start();
+
 	}
 	
 	public void paint(Graphics g)
 	{
-		m_game.draw(g);
-	
+		validate();
+		m_game.draw(g);	
 	}
 	
 	
@@ -68,6 +82,17 @@ public class GameApplet extends Applet
 		}
 	}
 	
+	public void playerNames()
+	{
+		PlayerNames = new String[numOfPlayers];
+		inputLabel = new Label("Player Name");
+		nameBlock = new TextField(10);
+		add(inputLabel);
+		add(nameBlock);
+		repaint();
+		
+	}
+	
 	public boolean action (Event e, Object args)
 	  { 
 		for(int i = 0; i < buttonCount; ++i)
@@ -76,13 +101,56 @@ public class GameApplet extends Applet
 		     {  // user has clicked this button
 				numOfPlayers = i +2;
 				System.out.println("WORKED "+ numOfPlayers);
-				m_game.setup(numOfPlayers);
+				
 				removeAll();
+				m_game.setup(numOfPlayers);
+
+				playerNames();
+
 				playerSet = true;
-				m_game.drawHand();
+				
 		     }
+			if (e.target instanceof TextField)
+			{
+				
+	            if (e.target == nameBlock && runOnce == true)
+	            {
+	            	System.out.println(playerCounter);
+	            	
+	            		PlayerNames[playerCounter] = nameBlock.getText(); 
+	            		nameBlock.setText("");
+	            		playerCounter++;
+	            		runOnce = false;
+	            		m_game.setPlayerNames(PlayerNames);
+				}
+	            if(playerCounter == numOfPlayers && Setupdone == false)
+	            {
+	            	removeAll();
+	            	//TODO first game drawing start here
+	            	m_game.drawHand();
+	    			Setupdone = true;	            	
+	            }
+	            
+			}
 		}
 	    return true;    // Yes, we do need this!
 	  }
 
+	@Override
+	public void run() {
+		while(true)
+		{
+//			System.out.println("repaint?");
+			repaint();
+			runOnce = true;
+			try{
+				Thread.sleep(100);
+			}catch(Exception e){}
+			
+			
+		}
+		
+	}
+
+	
 }
