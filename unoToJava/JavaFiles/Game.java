@@ -117,6 +117,21 @@ public class Game extends JFrame implements ActionListener
 		//}
 		return input;
 	}
+	//set player count
+	public void setPlayerCount(int a_p)
+	{
+		m_playerCount = a_p;
+	}
+	
+	public void setPlayerNames(String a_n[])
+	{
+		for(int i = 0; i < m_playerCount; ++i)
+		{
+			System.out.println(a_n[i]);
+			//m_playerList[i].setNameBetter(a_n[i]);
+		}
+		
+	}
 	//setup initial player data and deal hands
 	public void setup()
 	{
@@ -199,6 +214,7 @@ public class Game extends JFrame implements ActionListener
 		m_playerCount = players;
 		m_playerList = new Player [m_playerCount];
 		
+		
 		for(int n = 0; n < m_playerCount; ++n)
 		{
 			m_playerList[n] = new Player(m_drawDeck);
@@ -206,11 +222,6 @@ public class Game extends JFrame implements ActionListener
 		
 		for(int i = 0; i < m_playerCount; ++i)
 		{
-			//TODO SET PLAYER NAME
-			//printf("Please enter name for Player %d: ", i+1);
-			////read in and set player name
-			//m_playerList[i].setName();
-			//printf("\n");
 			
 			//deal cards
 			for(int n = 0; n < INITIAL_HAND; ++n)
@@ -985,7 +996,9 @@ public class Game extends JFrame implements ActionListener
 		
 	}
 	
+
 	public void drawHand()
+
 	{
 
 		int current = m_discardPile.getLastCard();
