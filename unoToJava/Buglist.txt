@@ -8,7 +8,8 @@ Fixed
 1. Not compatible with Java initially
 2. Name entry buttons not all functioning properly(fixed)
 3. Starting hand is only 6 cards when should be 7(fixed)
-4. Starting hand randomly starts at 9 cards after initial run(fixed? unable to replicate currently)
+4. Starting hand randomly starts at 9 cards after initial run
+   (very rare chance to occur now, but I did still get it to happen)
 5. Cards played from hand don't replace Center card (fixed)
 6. Can't tell which player's turn it is so it is hard to tell if 
    skip and reverse cards are functioning properly(implemented)
@@ -22,3 +23,10 @@ Fixed
     until hitting draw card button(2 player game only so far)(skip condition, not a bug)
 12. Array exception on cards that you can't play(fixed? can't replicate anymore)
 13. Names not being saved (fixed)
+14. Resizing window changes button layout(not really sure how to fix it I guess)
+15. Next player's turn skipped when previous player plays a draw card or draw 4 wild card
+    (or do draw cards also skip their turn in addition to making them draw cards? 
+     if so then this isn't a bug either and I just didn't understand the rule about them)
+16. Sometimes it won't let you play certain cards that match the color of the 
+    current card and should be able to be played(haven't seen this occur again yet)
+
