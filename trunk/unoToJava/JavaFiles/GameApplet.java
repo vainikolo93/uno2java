@@ -30,7 +30,7 @@ public class GameApplet extends Applet implements Runnable
 	Button player[];
 	
 	Button cards[];
-	JPanel buttons;
+	boolean cardsSet = false;
 
 	Label inputLabel;
 	TextField nameBlock;
@@ -131,6 +131,36 @@ public class GameApplet extends Applet implements Runnable
 		     }
 			
 		}
+		
+		
+		if(cardsSet)
+		{
+			
+			//checks to see if the card is legal
+			for(int i=0; i<m_game.getCurrentPlayer().getHand().getNumOfCards(); ++i)//m_game.getCurrentPlayer().getHand().getColorAt(i) != lastColor || m_game.getCurrentPlayer().getHand().getTypeAt(i) != lastType; ++i)
+			{
+				
+				if(e.target == cards[i])
+				{
+					if(m_game.isCardLegal(i))
+					{
+						//play card function here
+						System.out.print("Yes, you can play the card at location ");
+					}
+					else
+					{
+						System.out.print("No, you can't play the card at location ");
+					}
+					
+					System.out.print(i);
+					System.out.print("\n");
+					
+					i=m_game.getCurrentPlayer().getHand().getNumOfCards();//checks to see if the card is legal
+				}
+			}
+		}
+		
+		
 		if (e.target instanceof TextField)
 		{
 			
@@ -152,30 +182,8 @@ public class GameApplet extends Applet implements Runnable
     			Setupdone = true;	            	
             }   
 		}
-		int temp = 0;
-		//finds out which card it is
-		for(int i=0; i<m_game.getCurrentPlayer().getHand().getNumOfCards()-1; ++i)
-		{
-			if(e.target == cards[i])
-			{
-				temp = i;
-				
-				if(m_game.isCardLegal(new Integer(temp)))
-				{
-					//play card function here
-					System.out.print("Yes, you can play the card at location ");
-				}
-				else
-				{
-					System.out.print("No, you can't play the card at location ");
-				}
-				
-				System.out.print(temp);
-				System.out.print("\n");
-				
-				i=m_game.getCurrentPlayer().getHand().getNumOfCards();//checks to see if the card is legal
-			}
-		}
+		
+		
 		
 		
 		
@@ -213,9 +221,9 @@ public class GameApplet extends Applet implements Runnable
 		/******************/
 		
 		
-		buttons = new JPanel();
+		//buttons = new JPanel();
 		Player player = m_game.getCurrentPlayer();
-		JButton cards[] = new JButton[player.getHand().getNumOfCards()];
+		cards = new Button[player.getHand().getNumOfCards()];
 		int i=0;
 		
 		/**
@@ -223,7 +231,7 @@ public class GameApplet extends Applet implements Runnable
 		 */
 		for(i=0; i<player.getHand().getNumOfCards()-1; ++i)
 		{
-			cards[i] = new JButton("" + player.getHand().getColorAt(i) 
+			cards[i] = new Button("" + player.getHand().getColorAt(i) 
 					+ " " + player.getHand().getTypeAt(i));
 			switch(player.getHand().getColorAt(i))
 			{
@@ -238,21 +246,16 @@ public class GameApplet extends Applet implements Runnable
 			case 'W':	cards[i].setBackground(new Color(0, 0, 0));	
 						cards[i].setForeground(new Color(255, 255, 255));	break;
 			}
-			//cards[i].addActionListener(this);
 			cards[i].setPreferredSize(new Dimension(75, 20));
-			buttons.add(cards[i]);
+			//buttons.add(cards[i]);
+			add(cards[i]);
 		}
 		/*****************/
 		
-		//sets the layout
-		buttons.setLayout(new BoxLayout(buttons, 1));
-		
-		
-		add(buttons);
+		cardsSet = true;
 	}
-	private int currentCard = 0;
 
-	@Override
+	//@Override
 	public void run() {
 		while(true)
 		{
