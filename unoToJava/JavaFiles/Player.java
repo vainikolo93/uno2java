@@ -13,7 +13,7 @@ public class Player
 	//default constructor
 	public Player()
 	{
-		m_score = 499;//TODO change back to 0
+		m_score = 0;
 		m_name = null;
 		uno = false;
 	}
@@ -21,7 +21,7 @@ public class Player
 	//size of another deck
 	public Player(Deck other)
 	{
-		m_score = 499;//TODO change back to 0
+		m_score = 0;
 		m_name = null;
 		uno = false;
 		//m_hand.load(other);

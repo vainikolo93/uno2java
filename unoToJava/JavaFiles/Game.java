@@ -775,7 +775,7 @@ public class Game extends JFrame implements ActionListener
 	{
 		//next player must still draw+2 and wild+4
 		//calculate the next player, without actually assigning the player
-		int nextP = -1; //set to invalid
+		int nextP = 0; //set to invalid
 		if(m_direction == FORWARD)
 		{
 			//loop through players
