@@ -1,6 +1,7 @@
 Current Bugs
 1. Won a round and click to continue button doesn't advance to next round 
    and causes out of bounds error
+   TODO added in deck, location of array exception for roundover
 2. Out of bounds exception when hitting draw button and there are no cards to draw left
    (occurred while testing a 10 player game) 
    same card is always drawn after this error happened
