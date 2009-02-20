@@ -3,5 +3,7 @@
 3. Applet window resizes randomly after initial run
 4. Starting hand is only 6 cards when should be 7(fixed)
 5. Cards played from hand don't replace Center card
-6. Can't tell which player's turn it is
- 
+6. Can't tell which player's turn it is or it doesn't change at all
+7. Wild cards don't work properly yet
+8. Initial Card to play off of doesn't match what is being drawn on screen 
+   color matches but type doesn't
