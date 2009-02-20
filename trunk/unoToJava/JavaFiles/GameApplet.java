@@ -31,6 +31,8 @@ public class GameApplet extends Applet implements Runnable
 	Button label2;
 	Button playerName;
 	Button hotSeat;
+	Button roundOver;
+	Button gameOver;
 
 	Label inputLabel;
 	TextField nameBlock;
@@ -88,6 +90,18 @@ public class GameApplet extends Applet implements Runnable
 		{
 			drawTopCard(g);
 			drawHUD(g);
+			if(m_game.isGameInRoundOverState())
+			{
+				drawRoundOver(g);
+			}
+			else if(m_game.isGameInGameOverState())
+			{
+				drawGameOver(g);
+			}
+			else //play
+			{
+				drawScoreBoard(g);
+			}
 		}
 		
 		//repaint();
@@ -199,6 +213,24 @@ public class GameApplet extends Applet implements Runnable
 		add(hotSeat);
 		
 	}
+	public void loadRoundOverButton()
+	{
+		roundOver = new Button("CLICK TO CONTINUE");
+		roundOver.setFont(new Font("Arial", Font.BOLD, 64));
+		roundOver.setBackground(Color.black);
+		roundOver.setForeground(Color.white);
+		roundOver.setPreferredSize(new Dimension(700, 160));
+		add(roundOver);
+	}
+	public void loadGameOverButton()
+	{
+		gameOver = new Button("WINNER!!!");
+		gameOver.setFont(new Font("Arial", Font.BOLD, 72));
+		gameOver.setBackground(Color.black);
+		gameOver.setForeground(Color.white);
+		gameOver.setPreferredSize(new Dimension(700, 160));
+		add(gameOver);
+	}
 	
 	public boolean action (Event e, Object args)
 	  { 
@@ -218,6 +250,13 @@ public class GameApplet extends Applet implements Runnable
 				actionButtons();
 				drawHand();
 			}
+		}
+		else if(e.target == roundOver)
+		{
+			m_game.reload();
+			removeAll();
+			actionButtons();
+			drawHand();
 		}
 		if(cardsSet)
 		{
@@ -399,8 +438,21 @@ public class GameApplet extends Applet implements Runnable
 							m_game.setCardPlayed(true);
 						}
 						else //if win, set end effect
-						{m_game.setEndEffect(t, c);}
-						{}
+						{
+							m_game.setEndEffect(t, c);
+							removeAll();
+							playerNameLabel();
+							
+							if(m_game.isGameInRoundOverState())
+							{
+								loadRoundOverButton();
+							}
+							else //game over
+							{
+								loadGameOverButton();
+							}
+						}
+						
 					}
 					else
 					{
@@ -700,9 +752,9 @@ public class GameApplet extends Applet implements Runnable
 		
 	}
 	
-	int hudX = 0;
+	int hudX = 0; int hud2X = 500;
 	int hudY = 250;
-	int hudW = 250;
+	int hudW = 250;int hud2W = 199;
 	int hudH = 229;
 	int pName_offsetX = 6;
 	int pName_offsetY = 22;
@@ -710,6 +762,7 @@ public class GameApplet extends Applet implements Runnable
 	int token_offset = 6;
 	int line_offsetY = 6;
 	int uno_offsetX = 200;
+	int score_offsetX = 160;
 	Font hudFont = new Font("Arial", 0, 18);
 	
 
@@ -748,5 +801,90 @@ public class GameApplet extends Applet implements Runnable
 			}
 		}
 
+	}
+	
+	public void drawScoreBoard(Graphics g)
+	{
+		g.setColor(Color.black);
+		g.drawRect(hud2X,hudY,hud2W,hudH);
+		g.setColor(Color.white);
+		g.fillRect(hud2X+1,hudY+1,hud2W-1,hudH-1);
+		
+		for(int i = 0; i < m_game.getPlayerCount(); ++i)
+		{
+			g.setColor(Color.black);
+			g.drawString(m_game.getPlayerName(i) + "'s score:", hud2X + pName_offsetX, hudY + ((i+1)*pName_offsetY) );
+			
+			g.setColor(Color.darkGray);
+			g.drawString(" " + m_game.getPlayerAt(i).getScore(), hud2X + score_offsetX, hudY + ((i+1)*pName_offsetY) );
+			
+			g.setColor(Color.black);
+			if(i != 9)//do not draw line...at bottom of hud
+			{g.drawLine(hud2X, hudY + ((i+1)*pName_offsetY)+line_offsetY, hud2X+hud2W, hudY + ((i+1)*pName_offsetY)+line_offsetY);}
+
+		}
+	}
+	
+	int headerX = 535;
+	int headerY = 290;
+	int headerX2 = 538;
+	int headerY2 = 320;
+	int headerX3 = 570;
+	int headerY3 = 340;
+	int headerX4 = 580;
+	int headerY4 = 370;
+	int headerX5 = 595;
+	int headerY5 = 390;
+	int headerX6 = 535;
+	int headerY6 = 420;
+	int headerX7 = 525;
+	int headerY7 = 440;
+	int headerX8 = 545;
+	int headerY8 = 460;
+	
+	public void drawRoundOver(Graphics g)
+	{
+		g.setColor(Color.black);
+		g.drawRect(hud2X,hudY,hud2W,hudH);
+		g.setColor(Color.lightGray);
+		g.fillRect(hud2X+1,hudY+1,hud2W-1,hudH-1);
+		g.setColor(Color.black);
+		g.drawString("ROUND " + m_game.getRoundCount() + " OVER", headerX, headerY);
+		g.drawString("Round " + m_game.getRoundCount() + " Winner:", headerX2, headerY2);
+		g.drawString(m_game.getCurrentPlayer().getName(), headerX3, headerY3);
+		g.drawString("Score:", headerX4, headerY4);
+		g.setColor(Color.red);
+		g.drawString(" " + m_game.getCurrentPlayer().getScore(), headerX5, headerY5);
+		g.setColor(Color.black);
+		g.drawString("Don't slack off yet!", headerX6, headerY6);
+		g.drawString("You must score 500", headerX7, headerY7);
+		g.drawString("to win the game.", headerX8, headerY8);
+	}
+	
+	int headerXo = 550;
+	int headerX2o = 548;
+	int headerX3o = 570;
+	int headerX4o = 560;
+	int headerX5o = 595;
+	int headerX6o = 510;
+	int headerX7o = 555;
+	int headerX8o = 550;
+	public void drawGameOver(Graphics g)
+	{
+		g.setColor(Color.black);
+		g.drawRect(hud2X,hudY,hud2W,hudH);
+		g.setColor(Color.lightGray);
+		g.fillRect(hud2X+1,hudY+1,hud2W-1,hudH-1);
+		g.setColor(Color.black);
+		g.drawString("GAME OVER", headerXo, headerY);
+		g.drawString("Game Winner:", headerX2o, headerY2);
+		g.drawString(m_game.getCurrentPlayer().getName(), headerX3o, headerY3);
+		g.drawString("Final Score:", headerX4o, headerY4);
+		g.setColor(Color.red);
+		g.drawString(" " + m_game.getCurrentPlayer().getScore(), headerX5o, headerY5);
+		g.setColor(Color.black);
+		g.drawString("CONGRADULATIONS", headerX6o, headerY6);
+		g.drawString("You are the", headerX7o, headerY7);
+		g.drawString("UNO Master!", headerX8o, headerY8);
 	}
 }

@@ -1,5 +1,5 @@
 Current Bugs
-1. Win condition isn't triggered to go to next round or end game
+
 
 
 Fixed
@@ -28,6 +28,9 @@ Fixed
 16. Sometimes it won't let you play certain cards that match the color of the 
     current card and should be able to be played(haven't seen this occur again yet)
 17. Duplicate cards, first card unplayable, second throws array exception(fixed)
-18. Array exception on drawing cards(fixed)
-19. Random out of bounds exception errors on cards that are legal to play(fixed)
-20. Applet window resizes randomly after initial run (unable to replicate)
+18. When start card is Draw, it does not skip the first player(fixed)
+19. When start card is Reverse, it gives the first player 2 extra cards(fixed)
+20. Array exception on drawing cards(fixed)
+21. Random out of bounds exception errors on cards that are legal to play(fixed)
+22. Applet window resizes randomly after initial run (unable to replicate)
+23. Win condition isn't triggered to go to next round or end game(fixed)

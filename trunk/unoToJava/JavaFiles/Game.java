@@ -598,6 +598,9 @@ public class Game extends JFrame implements ActionListener
 		//if player has 0 cards left in hand
 		if(m_playerList[m_currentPlayer].getHand().getNumOfCards() == 0)
 		{
+			//calculate player's score
+			m_playerList[m_currentPlayer].incrementScore(calcScore());
+			
 			//if the player has won the game
 			if(m_playerList[m_currentPlayer].getScore() >= WINNING_SCORE)
 			{
@@ -739,8 +742,9 @@ public class Game extends JFrame implements ActionListener
 		case 'W':
 			wildSelect = true;
 			m_gamestate = STATE_WILD_SELECT;
+			break;
 		}
-		
+
 		switch(type)
 		{
 		//reverse
@@ -762,7 +766,6 @@ public class Game extends JFrame implements ActionListener
 		case 'S':
 			calcNextPlayer();
 			break;
-			
 		}
 	}
 	//set the effect for the last card played in a round
@@ -1130,6 +1133,18 @@ public class Game extends JFrame implements ActionListener
 		{return true;}
 		return false;
 	}
+	public boolean isGameInRoundOverState()
+	{
+		if(m_gamestate == STATE_ROUND_OVER)
+		{return true;}
+		return false;
+	}
+	public boolean isGameInGameOverState()
+	{
+		if(m_gamestate == STATE_GAME_OVER)
+		{return true;}
+		return false;
+	}
 	public boolean isGameInHotSeatState()
 	{
 		if(m_gamestate == STATE_HOT_SEAT)
@@ -1139,6 +1154,10 @@ public class Game extends JFrame implements ActionListener
 	public void setGamePlay()
 	{
 		m_gamestate = STATE_PLAY;
+	}
+	public int getRoundCount()
+	{
+		return m_round;
 	}
 	public void setCursorLock(boolean setAs)
 	{
