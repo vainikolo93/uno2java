@@ -69,12 +69,7 @@ public class Game extends JFrame implements ActionListener
 		load(a_playerCount, a_filename);
 	}
 	//constructor that loads based off predefined  file name
-	public Game(String a_filename) throws IOException
-	{
-		this();
-		
-		load(a_filename);
-	}
+
 	//loads based off a predefined player count and file name
 	public void load(int a_playerCount, String a_filename) throws IOException
 	{
@@ -95,23 +90,9 @@ public class Game extends JFrame implements ActionListener
 	}
 	//determines player count
 	//loads off a predefined filename
-	public void load(String a_filename) throws IOException
-	{
-		int input = inputPlayerCount();
-		load(input, a_filename);
-	}
+
 	//inputs a valid player number
-	public int inputPlayerCount()
-	{
-		int input = 0;
-		//TODO GET PLAYER COUNT
-		//printf("How many players? (Enter a number between 2 and 10)\n");
-		//while(input < 2 || input > 10)
-		//{
-		//	scanf("%d", &input);
-		//}
-		return input;
-	}
+
 	//set player count
 	public void setPlayerCount(int a_p)
 	{
@@ -132,75 +113,7 @@ public class Game extends JFrame implements ActionListener
 		return m_playerList[a_p].getName();
 	}
 	//setup initial player data and deal hands
-	public void setup()
-	{
-		//set direction of game play
-		m_direction = FORWARD;
-		//set state
-		m_gamestate = STATE_HOT_SEAT;
-		
-		//for all players
-		//make sure player count has been set
-		if(m_playerCount < 0)//invalid
-		{
-			m_playerCount = inputPlayerCount();
-		}
-		for(int i = 0; i < m_playerCount; ++i)
-		{
-			//TODO SET PLAYER NAME
-			//printf("Please enter name for Player %d: ", i+1);
-			////read in and set player name
-			//m_playerList[i].setName();
-			//printf("\n");
-			
-			//deal cards
-			for(int n = 0; n < INITIAL_HAND; ++n)
-			{
-				m_drawDeck.drawCard(m_playerList[i].getHand());
-			}
-			//TODO REMOVE THIS DEBUG
-			m_playerList[i].getHand().debug();
-		}
-		
-		//randomly select starting player
-		Random rand = new Random();
-		m_currentPlayer = rand.nextInt(m_playerCount);
-		
-		//draw first card to the discard pile
-		//make sure it is legal
-		//NOTE: It is illegal to start with a wild DRAW 4 card
-		boolean isLegal = false;
-		while (!isLegal)
-		{
-			m_drawDeck.drawCard(m_discardPile);
-			//if it is a Wild Draw 4
-			if(m_discardPile.getTypeAt(m_discardPile.getLastCard()) == '4'
-					&& m_discardPile.getColorAt(m_discardPile.getLastCard()) == 'W')
-			{
-				//not legal
-				//shuffle back into deck
-				m_drawDeck.shuffle(m_discardPile);
-			}
-			else //legal
-			{
-				isLegal = true;
-			}
-		}
-		
-		//after the first card is drawn, set its effect
-		char t = m_discardPile.getTypeAt(m_discardPile.getLastCard());
-		char c = m_discardPile.getColorAt(m_discardPile.getLastCard());
-		setInitEffect(t, c);
-		
-		//TODO Finish cursor limits
-		//m_cursor.m_icon = char(16);
-		//setCursorLimits(m_playerList[m_currentPlayer].getHand().getNumOfCards());
-	
-		//TODO REMOVE THIS DEBUG
-		System.out.println("Starting Player: " + m_currentPlayer + " Card Type: " + t +
-				" Card Color: " + c + "\n");
-		
-	}
+
 	//setup that takes player count as a parameter
 	public void setup(int players)
 	{
@@ -836,6 +749,7 @@ public class Game extends JFrame implements ActionListener
 			m_direction = BACKWARD;
 			//and go to the next player
 			calcNextPlayer();
+			break;
 		//draw
 		case 'D': //draw 2 cards for the first player AND skips their turn :(
 			for(int n = 0; n < 2; ++n)
@@ -843,9 +757,11 @@ public class Game extends JFrame implements ActionListener
 				m_drawDeck.drawCard(m_playerList[m_currentPlayer].getHand());
 			}
 			calcNextPlayer();
+			break;
 		//skips the first player
 		case 'S':
 			calcNextPlayer();
+			break;
 			
 		}
 	}

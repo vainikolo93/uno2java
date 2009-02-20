@@ -225,9 +225,16 @@ public class GameApplet extends Applet implements Runnable
 			{
 				actionWild(e, args);
 			}
-			else //game in play
+			else if(e.target == action[0]
+					|| e.target == action[1]
+					|| e.target == action[2]
+					|| e.target == action[3])//game in play
 			{
 				actionActionButtons(e, args);
+				
+			}
+			else
+			{
 				actionPlayCard(e, args);
 			}
 		}
@@ -355,9 +362,8 @@ public class GameApplet extends Applet implements Runnable
 			q = m_game.getCurrentPlayer().getHand().getQuantityAt(i);
 			while(q > 0)	
 			{
-
+				System.out.println(e.target);
 				if(e.target == cards[j])
-
 				{
 					//if the cursor is locked, set the look at to the last card drawn
 					if(m_game.getCursorLock())
