@@ -1149,7 +1149,22 @@ public class Game extends JFrame implements ActionListener
 		drawHand();
 	}
 
-	
+	public boolean getCardPlayed()
+	{
+		return cardPlayed;
+	}
+	public void setCardPlayed(boolean setAs)
+	{
+		cardPlayed = setAs;
+	}
+	public char getWildColor()
+	{
+		return m_wildColor;
+	}
+	public void setWildColor(char col)
+	{
+		m_wildColor = col;
+	}
 	
 	public Deck getDiscardPile()
 	{
