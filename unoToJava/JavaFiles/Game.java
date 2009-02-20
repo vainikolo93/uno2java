@@ -126,6 +126,11 @@ public class Game extends JFrame implements ActionListener
 		}
 		
 	}
+	
+	public String getPlayerName(int a_p)
+	{
+		return m_playerList[a_p].getName();
+	}
 	//setup initial player data and deal hands
 	public void setup()
 	{

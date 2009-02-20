@@ -16,4 +16,6 @@
     until hitting draw card button(2 player game only so far)
 13. Win condition isn't triggered to go to next round or end game
 14. Random out of bounds exception errors on cards that are legal to play
-
+15. Array exception on cards that you can't play(fixed? can't replicate anymore)
+16. Array exception on drawing cards
+17. Names not being saved (fixed)
