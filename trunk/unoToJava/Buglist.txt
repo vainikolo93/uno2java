@@ -11,7 +11,8 @@
    color matches but type doesn't(fixed)
 10. Draw button makes players hand go away except for the card drawn
 11. Names aren't displayed anywhere
-12. 2nd player playing a Draw card makes it so the player can't end turn
-	(2 player game only)
-
+12. 2nd player playing a Draw card makes it so the player can't end turn 
+    until hitting draw card button(2 player game only so far)
+13. Win condition isn't triggered to go to next round or end game
+14. Random out of bounds exception errors on cards that are legal to play
 
