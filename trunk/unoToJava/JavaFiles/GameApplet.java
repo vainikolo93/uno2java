@@ -362,7 +362,7 @@ public class GameApplet extends Applet implements Runnable
 			q = m_game.getCurrentPlayer().getHand().getQuantityAt(i);
 			while(q > 0)	
 			{
-				System.out.println(e.target);
+				//System.out.println(e.target);
 				if(e.target == cards[j])
 				{
 					//if the cursor is locked, set the look at to the last card drawn
@@ -407,8 +407,8 @@ public class GameApplet extends Applet implements Runnable
 						System.out.print("No, you can't play the card at location ");
 					}
 					
-					System.out.print(i);
-					System.out.print("\n");
+					//System.out.print(i);
+					//System.out.print("\n");
 					
 					i=m_game.getCurrentPlayer().getHand().getNumOfCards();//checks to see if the card is legal
 					
@@ -453,7 +453,7 @@ public class GameApplet extends Applet implements Runnable
 		
 
 		int current = m_game.getDiscardPile().getLastCard();
-		System.out.print("\n\n\n");
+		System.out.print("\n");
 		System.out.print(m_game.getDiscardPile().getColorAt(current));
 		System.out.print(" ");
 		System.out.print(m_game.getDiscardPile().getTypeAt(current));
