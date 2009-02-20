@@ -1,14 +1,11 @@
 1. Not compatible with Java initially
 2. Name entry buttons not all functioning properly(fixed)
-<<<<<<< .mine
 3. Applet window resizes randomly after initial run - rare
 4. Starting hand is only 6 cards when should be 7(fixed)
-5. Starting hand randomly starts at 9 cards after initial run  - very rare=======
-3. Applet window resizes randomly after initial run
-4. Starting hand is only 6 cards when should be 7(fixed)
-5. Cards played from hand don't replace Center card
-6. Can't tell which player's turn it is or it doesn't change at all
-7. Wild cards don't work properly yet
-8. Initial Card to play off of doesn't match what is being drawn on screen 
-   color matches but type doesn't
->>>>>>> .r24
+5. Starting hand randomly starts at 9 cards after initial run  - very rare
+6. Cards played from hand don't replace Center card (fixed)
+7. Can't tell which player's turn it is or it doesn't change at all
+8. Wild cards don't work properly yet
+9. Initial Card to play off of doesn't match what is being drawn on screen 
+   color matches but type doesn't(fixed)
+
