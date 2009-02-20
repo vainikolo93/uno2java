@@ -996,7 +996,16 @@ public class Game extends JFrame implements ActionListener
 		
 	}
 	
+	public int getPlayerCount()
+	{
+		return m_playerCount;
+	}
 
+	public Player getPlayerAt(int n)
+	{
+		return m_playerList[n];
+	}
+	
 	public void drawHand()
 
 	{

@@ -87,6 +87,7 @@ public class GameApplet extends Applet implements Runnable
 		if(Setupdone)
 		{
 			drawTopCard(g);
+			drawHUD(g);
 		}
 		
 		//repaint();
@@ -348,20 +349,22 @@ public class GameApplet extends Applet implements Runnable
 		int j = 0;
 		int offset = 0;
 		char t = ' ', c = ' ';
-		//checks to see if the card is legal
+		
 		for(int i=0; i<m_game.getCurrentPlayer().getHand().getNumOfCards() - offset; ++i)//m_game.getCurrentPlayer().getHand().getColorAt(i) != lastColor || m_game.getCurrentPlayer().getHand().getTypeAt(i) != lastType; ++i)
 		{
 			q = m_game.getCurrentPlayer().getHand().getQuantityAt(i);
-			
-			while(q > 0)
+			while(q > 0)	
 			{
+
 				if(e.target == cards[j])
+
 				{
 					//if the cursor is locked, set the look at to the last card drawn
 					if(m_game.getCursorLock())
 					{
 						i = m_game.getCurrentPlayer().getHand().getLastCard();
 					}
+					
 					if(m_game.isCardLegal(i) && !m_game.getCardPlayed())
 					{
 						//play card function here
@@ -402,6 +405,7 @@ public class GameApplet extends Applet implements Runnable
 					System.out.print("\n");
 					
 					i=m_game.getCurrentPlayer().getHand().getNumOfCards();//checks to see if the card is legal
+					
 				}
 				if(q > 1)
 				{
@@ -411,6 +415,7 @@ public class GameApplet extends Applet implements Runnable
 				--q;
 			}
 		}
+
 	}
 	public void actionPlayerName(Event e, Object args)
 	{
@@ -463,6 +468,7 @@ public class GameApplet extends Applet implements Runnable
 		 * sets the color for each card and creates the buttons
 		 */
 		for(int i=0; i<(player.getHand().getNumOfCards() - offset); ++i)
+		//for(int i=0; i<player.getHand().getSize(); ++i)
 		{
 			q = player.getHand().getQuantityAt(i);
 			color = getColor(player, i);
@@ -557,7 +563,10 @@ public class GameApplet extends Applet implements Runnable
 			try{
 				Thread.sleep(100);
 			}catch(Exception e){}
-			
+			if(Setupdone)
+			{
+			m_game.clearUnos();//clear all old uno calls
+			}
 			
 		}
 		
@@ -684,9 +693,54 @@ public class GameApplet extends Applet implements Runnable
 		g.drawString(temp, topCardFontX + topCardFontX_Offset, topCardFontY);
 		
 	}
+	
+	int hudX = 0;
+	int hudY = 250;
+	int hudW = 250;
+	int hudH = 229;
+	int pName_offsetX = 6;
+	int pName_offsetY = 22;
+	int token_offsetX = 100;
+	int token_offset = 6;
+	int line_offsetY = 6;
+	int uno_offsetX = 200;
+	Font hudFont = new Font("Arial", 0, 18);
+	
 
 	public void drawHUD(Graphics g)
 	{
-		
+		//draw hud
+		g.setColor(Color.black);
+		g.drawRect(hudX,hudY,hudW,hudH);
+		g.setColor(Color.white);
+		g.fillRect(hudX+1,hudY+1,hudW-1,hudH-1);
+
+		//label
+		g.setColor(Color.black);
+		g.setFont(hudFont);
+		for(int i = 0; i < m_game.getPlayerCount(); ++i)
+		{
+			if(i == m_game.getCurrentPlayerLoc())
+			{g.setColor(Color.red);}
+			else
+			{g.setColor(Color.black);}
+			g.drawString(m_game.getPlayerName(i), hudX + pName_offsetX, hudY + ((i+1)*pName_offsetY) );
+			
+			g.setColor(Color.darkGray);
+			for(int x = 0; x < m_game.getPlayerAt(i).getHand().getNumOfCards(); ++x)
+			{
+				g.drawString("|", hudX + token_offsetX + (x*token_offset), hudY + ((i+1)*pName_offsetY));
+			}
+			g.setColor(Color.black);
+			if(i != 9)//do not draw line...at bottom of hud
+			{g.drawLine(hudX, hudY + ((i+1)*pName_offsetY)+line_offsetY, hudW, hudY + ((i+1)*pName_offsetY)+line_offsetY);}
+			
+			if(m_game.getPlayerAt(i).getUno())
+			{
+				g.setColor(Color.red);
+				g.drawString("UNO", hudX + uno_offsetX, hudY + ((i+1)*pName_offsetY));
+			}
+		}
+
 	}
 }
