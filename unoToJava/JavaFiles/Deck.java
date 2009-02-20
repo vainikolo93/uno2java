@@ -74,7 +74,6 @@ public class Deck
 	//REALLY BAD!!!!!
 	public void loadMcNasty() 
 	{
-		// TODO Auto-generated method stub
 		m_size = 54;
 		m_data = new card[m_size];
 		
@@ -450,6 +449,7 @@ public class Deck
 		//add it to the end
 		if(!isAdded)
 		{
+			//TODO analyze this section for round over array exception
 			m_data[m_size].m_type = other.m_data[card].m_type;
 			m_data[m_size].m_color = other.m_data[card].m_color;
 			m_data[m_size].m_quantity = 1;

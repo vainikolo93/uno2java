@@ -619,7 +619,7 @@ public class GameApplet extends Applet implements Runnable
 			repaint();
 			runOnce = true;
 			try{
-				Thread.sleep(100);
+				Thread.sleep(1000);
 			}catch(Exception e){}
 			if(Setupdone)
 			{
