@@ -5,7 +5,6 @@ import java.awt.Button;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -13,15 +12,11 @@ import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.Random;
 
-import javax.swing.AbstractAction;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.JTextPane;
-
 
 
 //handles the data for the cursor
@@ -40,8 +35,6 @@ public class Game extends JFrame implements ActionListener
 	private Player[] m_playerList;
 	private int m_playerCount;
 	public int m_currentPlayer;
-	private Map[] mask;
-	private cursor m_cursor;
 	private int m_direction;
 	private int m_gamestate;
 	private char m_input;
@@ -587,7 +580,7 @@ public class Game extends JFrame implements ActionListener
 	//a player calls uno when they have one card left in their hand
 	public void callUno()
 	{
-		if(!unoCalled)//this way they can onlly call UNO or receive the 
+		if(!unoCalled)//this way they can only call UNO or receive the 
 			//penalty once per turn
 		{
 			//make sure the player only has one card left
@@ -657,7 +650,7 @@ public class Game extends JFrame implements ActionListener
 		
 		//set flag so next player can draw a card
 		hasDrawn = false;
-		//set flag so next player can move the cursor
+		//free movement for next player
 		cursorLocked = false;
 		//set flag for the next players end turn
 		cardPlayed = false;
@@ -1095,7 +1088,7 @@ public class Game extends JFrame implements ActionListener
 		jf.getContentPane().add(buttons);
 		*/
 	}
-	private int currentCard;
+	//private int currentCard;
 	
 	//@Override
 	public void actionPerformed(ActionEvent e)
@@ -1165,12 +1158,23 @@ public class Game extends JFrame implements ActionListener
 	{
 		m_wildColor = col;
 	}
+	public boolean getHasDrawn()
+	{
+		return hasDrawn;
+	}
+	public void setHasDrawn(boolean setAs)
+	{
+		hasDrawn = setAs;
+	}
 	
 	public Deck getDiscardPile()
 	{
 		return m_discardPile;
 	}
-	
+	public Deck getDrawDeck()
+	{
+		return m_drawDeck;
+	}
 	public Player getPlayer(int index)
 	{
 		return m_playerList[index];
@@ -1179,6 +1183,26 @@ public class Game extends JFrame implements ActionListener
 	public Player getCurrentPlayer()
 	{
 		return m_playerList[m_currentPlayer];
+	}
+	public int getCurrentPlayerLoc()
+	{
+		return m_currentPlayer;
+	}
+	public boolean getCursorLock()
+	{
+		return cursorLocked;
+	}
+	public void setCursorLock(boolean setAs)
+	{
+		cursorLocked = setAs;
+	}
+	public boolean getUnoCalled()
+	{
+		return unoCalled;
+	}
+	public boolean getUnoFailed()
+	{
+		return unoFailed;
 	}
 	/**
 	 * "#defines"
