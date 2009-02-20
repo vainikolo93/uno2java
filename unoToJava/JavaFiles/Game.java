@@ -549,6 +549,7 @@ public class Game extends JFrame implements ActionListener
 			break;
 		}
 	}
+
 	//set the next player
 	public void calcNextPlayer()
 	{

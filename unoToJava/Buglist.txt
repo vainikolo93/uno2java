@@ -1,21 +1,24 @@
+Current Bugs
+1. Win condition isn't triggered to go to next round or end game
+2. Random out of bounds exception errors on cards that are legal to play
+3. Array exception on drawing cards
+4. Applet window resizes randomly after initial run - very rare
+
+Fixed
 1. Not compatible with Java initially
 2. Name entry buttons not all functioning properly(fixed)
-3. Applet window resizes randomly after initial run - rare
-4. Starting hand is only 6 cards when should be 7(fixed)
-5. Starting hand randomly starts at 9 cards after initial run  - very rare
-6. Cards played from hand don't replace Center card (fixed)
-7. Can't tell which player's turn it is so it is hard to tell if 
-   skip and reverse cards are functioning properly
-8. Wild cards don't work properly yet
-9. Initial Card to play off of doesn't match what is being drawn on screen 
+3. Starting hand is only 6 cards when should be 7(fixed)
+4. Starting hand randomly starts at 9 cards after initial run(fixed? unable to replicate currently)
+5. Cards played from hand don't replace Center card (fixed)
+6. Can't tell which player's turn it is so it is hard to tell if 
+   skip and reverse cards are functioning properly(implemented)
+7. Wild cards don't work properly yet(implemented)
+8. Initial Card to play off of doesn't match what is being drawn on screen 
    color matches but type doesn't(fixed)
-10. Draw button makes players hand go away except for the card drawn (fixed)
+9. Draw button makes players hand go away except for the card drawn (fixed)
 (not a bug, in Uno, if you draw a new card, that is the only card you are allowed to play)
-11. Names aren't displayed anywhere
-12. 2nd player playing a Draw card makes it so the player can't end turn 
-    until hitting draw card button(2 player game only so far)
-13. Win condition isn't triggered to go to next round or end game
-14. Random out of bounds exception errors on cards that are legal to play
-15. Array exception on cards that you can't play(fixed? can't replicate anymore)
-16. Array exception on drawing cards
-17. Names not being saved (fixed)
+10. Names aren't displayed anywhere(implemented)
+11. 2nd player playing a Draw card makes it so the player can't end turn 
+    until hitting draw card button(2 player game only so far)(skip condition, not a bug)
+12. Array exception on cards that you can't play(fixed? can't replicate anymore)
+13. Names not being saved (fixed)

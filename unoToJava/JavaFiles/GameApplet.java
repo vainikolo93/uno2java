@@ -302,6 +302,7 @@ public class GameApplet extends Applet implements Runnable
 				case ACTION_DRAW:
 					if(!m_game.getHasDrawn() && !m_game.getCardPlayed()&& m_game.okayToAddCard(m_game.getCurrentPlayerLoc()))
 					{
+
 						m_game.getDrawDeck().drawCard(m_game.getCurrentPlayer().getHand());
 						m_game.setHasDrawn(true);
 						m_game.setCursorLock(true);
