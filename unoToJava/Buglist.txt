@@ -29,4 +29,4 @@ Fixed
      if so then this isn't a bug either and I just didn't understand the rule about them)
 16. Sometimes it won't let you play certain cards that match the color of the 
     current card and should be able to be played(haven't seen this occur again yet)
-
+17. Duplicate cards, first card unplayable, second throws array exception(fixed)
