@@ -122,8 +122,7 @@ public class Game extends JFrame implements ActionListener
 	{
 		for(int i = 0; i < m_playerCount; ++i)
 		{
-			System.out.println(a_n[i]);
-			//m_playerList[i].setNameBetter(a_n[i]);
+			m_playerList[i].setNameBetter(a_n[i]);
 		}
 		
 	}

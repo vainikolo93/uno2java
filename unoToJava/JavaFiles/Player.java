@@ -59,7 +59,6 @@ public class Player
 	public void setNameBetter(String a_n)
 	{
 		m_name = a_n;
-		
 	}
 	
 	//print the player name
