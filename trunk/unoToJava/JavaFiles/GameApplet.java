@@ -5,15 +5,10 @@ import java.awt.Dimension;
 import java.awt.Event;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.event.ActionEvent;
 import java.awt.Label;
 import java.awt.TextField;
 import java.io.IOException;
 
-import javax.swing.AbstractAction;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JPanel;
 
 
 
@@ -453,12 +448,14 @@ public class GameApplet extends Applet implements Runnable
 		Player player = m_game.getCurrentPlayer();
 		cards = new Button[player.getHand().getNumOfCards()];
 		int q = 0;
+		int j = 0;
+		int offset = 0;
 		
 		String color, type;
 		/**
 		 * sets the color for each card and creates the buttons
 		 */
-		for(int i=0; i<player.getHand().getNumOfCards(); ++i)
+		for(int i=0; i<player.getHand().getNumOfCards() - offset; ++i)
 		{
 			q = player.getHand().getQuantityAt(i);
 			color = getColor(player, i);
@@ -466,25 +463,30 @@ public class GameApplet extends Applet implements Runnable
 			//print all duplicates
 			while(q > 0)
 			{
-			cards[i] = new Button("" + color 
-					+ " " + type);
-			switch(player.getHand().getColorAt(i))
-			{
-			case 'B':	cards[i].setBackground(new Color(0, 0, 255));	
-						cards[i].setForeground(new Color(0, 0, 0));	break;
-			case 'R':	cards[i].setBackground(new Color(255, 0, 0));	
-						cards[i].setForeground(new Color(0, 0, 0));	break;
-			case 'G':	cards[i].setBackground(new Color(0, 255, 0));	
-						cards[i].setForeground(new Color(0, 0, 0));	break;
-			case 'Y':	cards[i].setBackground(new Color(255, 255, 0));	
-						cards[i].setForeground(new Color(0, 0, 0));	break;
-			case 'W':	cards[i].setBackground(new Color(0, 0, 0));	
-						cards[i].setForeground(new Color(255, 255, 255));	break;
-			}
-			cards[i].setPreferredSize(new Dimension(150, 20));
-			//buttons.add(cards[i]);
-			add(cards[i]);
-			--q;
+				cards[j] = new Button("" + color 
+						+ " " + type);
+				switch(player.getHand().getColorAt(i))
+				{
+				case 'B':	cards[j].setBackground(new Color(0, 0, 255));	
+							cards[j].setForeground(new Color(0, 0, 0));	break;
+				case 'R':	cards[j].setBackground(new Color(255, 0, 0));	
+							cards[j].setForeground(new Color(0, 0, 0));	break;
+				case 'G':	cards[j].setBackground(new Color(0, 255, 0));	
+							cards[j].setForeground(new Color(0, 0, 0));	break;
+				case 'Y':	cards[j].setBackground(new Color(255, 255, 0));	
+							cards[j].setForeground(new Color(0, 0, 0));	break;
+				case 'W':	cards[j].setBackground(new Color(0, 0, 0));	
+							cards[j].setForeground(new Color(255, 255, 255));	break;
+				}
+				cards[j].setPreferredSize(new Dimension(150, 20));
+				//buttons.add(cards[i]);
+				add(cards[j]);
+				if(q > 1)
+				{
+					offset += 1;
+				}
+				--q;
+				j++;
 			}
 		}
 		/*****************/
