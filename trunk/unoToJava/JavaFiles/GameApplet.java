@@ -35,6 +35,7 @@ public class GameApplet extends Applet implements Runnable
 	Button label1;
 	Button label2;
 	Button playerName;
+	Button hotSeat;
 
 	Label inputLabel;
 	TextField nameBlock;
@@ -190,11 +191,38 @@ public class GameApplet extends Applet implements Runnable
 		
 	}
 	
+	public void loadHotSeat()
+	{
+		removeAll();
+		playerNameLabel();
+		hotSeat = new Button("HOT SEAT");
+		hotSeat.setFont(new Font("Arial", Font.BOLD, 72));
+		hotSeat.setBackground(Color.black);
+		hotSeat.setForeground(Color.white);
+		hotSeat.setPreferredSize(new Dimension(700, 160));
+		add(hotSeat);
+		
+	}
+	
 	public boolean action (Event e, Object args)
 	  { 
 		
 		actionPlayerNum(e, args);
 		
+		if(e.target == hotSeat)
+		{
+			if(m_game.isGameInWildState())
+			{
+				wildSelection();
+			}
+			else
+			{
+				m_game.setGamePlay();
+				removeAll();
+				actionButtons();
+				drawHand();
+			}
+		}
 		if(cardsSet)
 		{
 			if(m_game.isGameInWildState())
@@ -290,9 +318,10 @@ public class GameApplet extends Applet implements Runnable
 					if(m_game.getCardPlayed() || (m_game.getHasDrawn() && !m_game.isCardLegal(m_game.getCurrentPlayer().getHand().getLastCard())))
 					{
 						m_game.endTurn();
-						removeAll();
-						actionButtons();
-						drawHand();
+						//removeAll();
+						//actionButtons();
+						//drawHand();
+						loadHotSeat();
 					}
 					break;
 				case ACTION_UNO:
@@ -321,7 +350,6 @@ public class GameApplet extends Applet implements Runnable
 	{
 		int q = 0;
 		char t = ' ', c = ' ';
-		
 		//checks to see if the card is legal
 		for(int i=0; i<m_game.getCurrentPlayer().getHand().getNumOfCards(); ++i)//m_game.getCurrentPlayer().getHand().getColorAt(i) != lastColor || m_game.getCurrentPlayer().getHand().getTypeAt(i) != lastType; ++i)
 		{
@@ -399,14 +427,10 @@ public class GameApplet extends Applet implements Runnable
         	m_game.setPlayerNames(PlayerNames);
         	removeAll();
         	//TODO first game drawing start here
-        	actionButtons();
-        	drawHand();
+        	loadHotSeat();	
+        	//actionButtons();
+        	//drawHand();
 			Setupdone = true;
-			//if the first card was a wild
-			if(m_game.isGameInWildState())
-			{
-				wildSelection();
-			}
         }   
 	}
 	

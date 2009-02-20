@@ -1171,6 +1171,8 @@ public class Game extends JFrame implements ActionListener
 		hasDrawn = setAs;
 	}
 	
+
+	
 	public Deck getDiscardPile()
 	{
 		return m_discardPile;
@@ -1199,6 +1201,12 @@ public class Game extends JFrame implements ActionListener
 	public boolean isGameInWildState()
 	{
 		if(m_gamestate == STATE_WILD_SELECT)
+		{return true;}
+		return false;
+	}
+	public boolean isGameInHotSeatState()
+	{
+		if(m_gamestate == STATE_HOT_SEAT)
 		{return true;}
 		return false;
 	}
