@@ -2,6 +2,9 @@ Current Bugs
 1. Out of bounds exception when hitting draw button and there are no cards to draw left
    (occurred while testing a 10 player game) 
    same card is always drawn after this error happened
+2. Giant number of copies of the same card added to hand and stops play(common after 3 or 4 rounds)
+3. rare array exception after ending turn
+
 
 Fixed
 1. Not compatible with Java initially
@@ -36,4 +39,5 @@ Fixed
 22. Applet window resizes randomly after initial run (unable to replicate)
 23. Win condition isn't triggered to go to next round or end game(fixed)
 24. Won a round and click to continue button doesn't advance to next round 
-  	 and causes out of bounds error
+  	 and causes out of bounds error(fixed)
+25. rare array exception on end of round fails to load new rounds, continues play(fixed)
