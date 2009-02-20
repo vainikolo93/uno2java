@@ -128,7 +128,7 @@ public class GameApplet extends Applet implements Runnable
 	
 	public void playerNames()
 	{
-		PlayerNames = new String[numOfPlayers];
+		
 		inputLabel = new Label("Enter Name for Player " + (playerCounter+1) + ":");
 		nameBlock = new TextField(10);
 		add(inputLabel);
@@ -144,12 +144,13 @@ public class GameApplet extends Applet implements Runnable
 			if (e.target == player[i] && !playerSet)
 		     {  // user has clicked this button
 				numOfPlayers = i +2;
-				System.out.println("WORKED "+ numOfPlayers);
+				//System.out.println("WORKED "+ numOfPlayers);
 				
 				removeAll();
 				m_game.setup(numOfPlayers);
+				PlayerNames = new String[numOfPlayers];
 				playerNames();
-
+				
 				playerSet = true;
 				
 
@@ -275,19 +276,18 @@ public class GameApplet extends Applet implements Runnable
 			
             if (e.target == nameBlock && runOnce == true)
             {
-            	System.out.println(playerCounter);
+        		PlayerNames[playerCounter] = nameBlock.getText(); 
+        		nameBlock.setText("");
+        		playerCounter++;
+        		runOnce = false;
+        		//m_game.setPlayerNames(PlayerNames);
+        		removeAll();//clean
+        		playerNames();//print new label and text field
             	
-            		PlayerNames[playerCounter] = nameBlock.getText(); 
-            		nameBlock.setText("");
-            		playerCounter++;
-            		runOnce = false;
-            		m_game.setPlayerNames(PlayerNames);
-            		removeAll();//clean
-            		playerNames();//print new label and text field
-            		
 			}
             if(playerCounter == numOfPlayers && Setupdone == false)
             {
+            	m_game.setPlayerNames(PlayerNames);
             	removeAll();
             	//TODO first game drawing start here
             	actionButtons();
