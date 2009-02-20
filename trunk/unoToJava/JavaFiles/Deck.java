@@ -450,9 +450,9 @@ public class Deck
 		if(!isAdded)
 		{
 			//TODO analyze this section for round over array exception
-			m_data[m_size].m_type = other.m_data[card].m_type;
-			m_data[m_size].m_color = other.m_data[card].m_color;
-			m_data[m_size].m_quantity = 1;
+			m_data[m_size-1].m_type = other.m_data[card].m_type;
+			m_data[m_size-1].m_color = other.m_data[card].m_color;
+			m_data[m_size-1].m_quantity = 1;
 			other.m_data[card].m_quantity--;
 		}
 	}

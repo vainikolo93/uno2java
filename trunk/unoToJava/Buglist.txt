@@ -1,8 +1,5 @@
 Current Bugs
-1. Won a round and click to continue button doesn't advance to next round 
-   and causes out of bounds error
-   TODO added in deck, location of array exception for roundover
-2. Out of bounds exception when hitting draw button and there are no cards to draw left
+1. Out of bounds exception when hitting draw button and there are no cards to draw left
    (occurred while testing a 10 player game) 
    same card is always drawn after this error happened
 
@@ -38,3 +35,5 @@ Fixed
 21. Random out of bounds exception errors on cards that are legal to play(fixed)
 22. Applet window resizes randomly after initial run (unable to replicate)
 23. Win condition isn't triggered to go to next round or end game(fixed)
+24. Won a round and click to continue button doesn't advance to next round 
+  	 and causes out of bounds error

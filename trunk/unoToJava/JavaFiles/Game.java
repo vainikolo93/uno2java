@@ -676,11 +676,13 @@ public class Game extends JFrame implements ActionListener
 	public void reload()
 	{
 		//shuffle the pile back into the deck
+		System.out.println("I broke shuffling discard into deck");
 		m_drawDeck.shuffle(m_discardPile);
 		
 		//shuffle all hands back into deck
 		for(int i = 0; i < m_playerCount; ++i)
 		{
+			System.out.println("I broke shuffling hands into deck");
 			m_drawDeck.shuffle(m_playerList[i].getHand());
 		}
 		
