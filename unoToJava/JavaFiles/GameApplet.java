@@ -345,15 +345,17 @@ public class GameApplet extends Applet implements Runnable
 	public void actionPlayCard(Event e, Object args)
 	{
 		int q = 0;
+		int j = 0;
+		int offset = 0;
 		char t = ' ', c = ' ';
 		//checks to see if the card is legal
-		for(int i=0; i<m_game.getCurrentPlayer().getHand().getNumOfCards(); ++i)//m_game.getCurrentPlayer().getHand().getColorAt(i) != lastColor || m_game.getCurrentPlayer().getHand().getTypeAt(i) != lastType; ++i)
+		for(int i=0; i<m_game.getCurrentPlayer().getHand().getNumOfCards() - offset; ++i)//m_game.getCurrentPlayer().getHand().getColorAt(i) != lastColor || m_game.getCurrentPlayer().getHand().getTypeAt(i) != lastType; ++i)
 		{
 			q = m_game.getCurrentPlayer().getHand().getQuantityAt(i);
 			
 			while(q > 0)
 			{
-				if(e.target == cards[i])
+				if(e.target == cards[j])
 				{
 					//if the cursor is locked, set the look at to the last card drawn
 					if(m_game.getCursorLock())
@@ -401,7 +403,12 @@ public class GameApplet extends Applet implements Runnable
 					
 					i=m_game.getCurrentPlayer().getHand().getNumOfCards();//checks to see if the card is legal
 				}
-			--q;
+				if(q > 1)
+				{
+					offset +=1;
+				}
+				j++;
+				--q;
 			}
 		}
 	}
@@ -422,7 +429,7 @@ public class GameApplet extends Applet implements Runnable
         {
         	m_game.setPlayerNames(PlayerNames);
         	removeAll();
-        	//TODO first game drawing start here
+        	//first game drawing start here
         	loadHotSeat();	
         	//actionButtons();
         	//drawHand();
@@ -455,7 +462,7 @@ public class GameApplet extends Applet implements Runnable
 		/**
 		 * sets the color for each card and creates the buttons
 		 */
-		for(int i=0; i<player.getHand().getNumOfCards() - offset; ++i)
+		for(int i=0; i<(player.getHand().getNumOfCards() - offset); ++i)
 		{
 			q = player.getHand().getQuantityAt(i);
 			color = getColor(player, i);
