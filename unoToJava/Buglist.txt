@@ -1,8 +1,6 @@
 Current Bugs
 1. Win condition isn't triggered to go to next round or end game
-2. Random out of bounds exception errors on cards that are legal to play
-3. Array exception on drawing cards
-4. Applet window resizes randomly after initial run - very rare
+
 
 Fixed
 1. Not compatible with Java initially
@@ -30,3 +28,6 @@ Fixed
 16. Sometimes it won't let you play certain cards that match the color of the 
     current card and should be able to be played(haven't seen this occur again yet)
 17. Duplicate cards, first card unplayable, second throws array exception(fixed)
+18. Array exception on drawing cards(fixed)
+19. Random out of bounds exception errors on cards that are legal to play(fixed)
+20. Applet window resizes randomly after initial run (unable to replicate)
