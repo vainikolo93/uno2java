@@ -45,7 +45,7 @@ public class NeatWindow extends JPanel implements MouseListener, KeyListener
 		g.fillRect(10, 10, 100, 100);
 	}
 
-	@Override
+	//@Override
 	public void mouseClicked(MouseEvent arg0) {
 		// TODO Auto-generated method stub
 		System.out.println("Clicked");
@@ -53,19 +53,19 @@ public class NeatWindow extends JPanel implements MouseListener, KeyListener
 		
 	}
 
-	@Override
+	//@Override
 	public void mouseEntered(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
+	//@Override
 	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
+	//@Override
 	public void mousePressed(MouseEvent e) {
 		// TODO Auto-generated method stub
 		System.out.println("preSSed");
@@ -73,24 +73,24 @@ public class NeatWindow extends JPanel implements MouseListener, KeyListener
 		
 	}
 
-	@Override
+	//@Override
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
+	//@Override
 	public void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub
 	}
 
-	@Override
+	//@Override
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
+	//@Override
 	//using keyTyped() because getKeyChar() only works with
 	//this function
 	public void keyTyped(KeyEvent e) 

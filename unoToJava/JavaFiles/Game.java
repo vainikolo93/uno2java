@@ -1097,7 +1097,7 @@ public class Game extends JFrame implements ActionListener
 	}
 	private int currentCard;
 	
-	@Override
+	//@Override
 	public void actionPerformed(ActionEvent e)
 	{
 		 String str = e.getActionCommand();
