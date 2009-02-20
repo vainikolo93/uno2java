@@ -441,7 +441,8 @@ public class Deck
 				m_data[r].m_quantity++;
 				//remove from the other deck
 				other.m_data[card].m_quantity--;
-				isAdded = true;
+				//isAdded = true;
+				System.out.print("notADDING:::::::::::::::::::::::\n");
 			}
 		}
 		

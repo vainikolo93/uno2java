@@ -237,6 +237,10 @@ public class GameApplet extends Applet implements Runnable
 		
 		actionPlayerNum(e, args);
 		
+		if(e.target == gameOver)
+		{
+			System.exit(0);
+		}
 		if(e.target == hotSeat)
 		{
 			if(m_game.isGameInWildState())
