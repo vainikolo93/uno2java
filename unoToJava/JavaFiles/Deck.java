@@ -421,6 +421,7 @@ public class Deck
 				addOtherToThis(r, other);
 			}
 		}
+		other.debug();
 	}
 	//add another deck to this deck
 	//this is used to shuffle (i.e. add the discard pile back to the draw deck)
@@ -430,7 +431,7 @@ public class Deck
 		//make sure size is updated
 		calcSize();
 		//search through the "visible" deck
-		for(int r = 0; r < m_size; ++r)
+		for(int r = 0; r < getSize(); ++r)
 		{
 			//if the card already exists in the deck
 			//update the quantity
