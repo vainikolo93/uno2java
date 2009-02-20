@@ -66,6 +66,11 @@ public class Player
 	{
 		System.out.println(m_name);
 	}
+	public String getName()
+	{
+		return m_name;
+		
+	}
 	//returns the players hand
 	public Deck getHand()
 	{
