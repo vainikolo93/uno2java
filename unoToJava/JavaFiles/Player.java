@@ -58,7 +58,23 @@ public class Player
 	
 	public void setNameBetter(String a_n)
 	{
-		m_name = a_n;
+		String temp = a_n;
+		//if the name is within the limit
+		if(temp.length() <= MAX_NAME_LENGTH)
+		{
+			m_name = temp;
+		}
+		else //limit the length
+		{
+			char tempElements[] = new char [MAX_NAME_LENGTH];
+			for(int n = 0; n < MAX_NAME_LENGTH; ++n)
+			{
+				//copy data into temporary char array
+				tempElements[n] = temp.charAt(n);
+			}
+			//then store the char array in m_name
+			m_name = new String(tempElements);
+		}
 	}
 	
 	//print the player name

@@ -291,7 +291,7 @@ public class Deck
 		int size = 0;
 		for(int r = 0; r < m_data.length; ++r)
 		{
-			//if ther is a card of this type & color
+			//if there is a card of this type & color
 			if(m_data[r].m_quantity > 0)
 			{
 				//increase size
@@ -517,6 +517,26 @@ public class Deck
 	}
 	
 	//END OF CLASS
+	public void add(int loc, char a_type, char a_color)
+	{
+		m_data[loc].m_type = a_type;
+		m_data[loc].m_color = a_color;
+	}
+	//returns the location of a card based off its color and type
+	public int getLocation(char a_type, char a_color)
+	{
+		int val = -1;
+		for(int n = 0; n < m_data.length; ++n)
+		{
+			//if the color and type match
+			if(m_data[n].m_type == a_type && m_data[n].m_color == a_color)
+			{
+				//return the location
+				val = n;
+			}
+		}
+		return val;
+	}
 }
 
 
