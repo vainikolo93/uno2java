@@ -9,7 +9,8 @@
 8. Wild cards don't work properly yet
 9. Initial Card to play off of doesn't match what is being drawn on screen 
    color matches but type doesn't(fixed)
-10. Draw button makes players hand go away except for the card drawn
+10. Draw button makes players hand go away except for the card drawn (fixed)
+(not a bug, in Uno, if you draw a new card, that is the only card you are allowed to play)
 11. Names aren't displayed anywhere
 12. 2nd player playing a Draw card makes it so the player can't end turn 
     until hitting draw card button(2 player game only so far)
