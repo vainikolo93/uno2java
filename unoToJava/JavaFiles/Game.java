@@ -1191,6 +1191,16 @@ public class Game extends JFrame implements ActionListener
 	{
 		return cursorLocked;
 	}
+	public boolean isGameInWildState()
+	{
+		if(m_gamestate == STATE_WILD_SELECT)
+		{return true;}
+		return false;
+	}
+	public void setGamePlay()
+	{
+		m_gamestate = STATE_PLAY;
+	}
 	public void setCursorLock(boolean setAs)
 	{
 		cursorLocked = setAs;

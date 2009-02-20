@@ -28,10 +28,12 @@ public class GameApplet extends Applet implements Runnable
 	
 	Game m_game;
 	Button player[];
-	
+	Button wildSelect[];
 	Button cards[];
 	Button action[];
 	boolean cardsSet = false;
+	Button label1;
+	Button label2;
 
 	Label inputLabel;
 	TextField nameBlock;
@@ -39,7 +41,7 @@ public class GameApplet extends Applet implements Runnable
 	static final int buttonCount = 9;
 	int numOfPlayers;
 
-
+	Graphics g;
 
 	String PlayerNames[];
 	int playerCounter = 0;
@@ -51,7 +53,7 @@ public class GameApplet extends Applet implements Runnable
 
 	public void init()
 	{
-		this.setSize(new Dimension(700, 400));
+		this.setSize(new Dimension(700, 450));
 		this.setBackground(new Color(225, 128, 225));
 		this.setFont(new Font("Arial", 0, 18));
 		try {
@@ -84,11 +86,12 @@ public class GameApplet extends Applet implements Runnable
 
 
 		validate();
-		m_game.draw(g);	
+		//m_game.draw(g);	
 		if(Setupdone)
 		{
 			drawTopCard(g);
 		}
+		
 		//repaint();
 	}
 	
@@ -137,6 +140,43 @@ public class GameApplet extends Applet implements Runnable
 		
 	}
 	
+	static final int WILD_COUNT = 4;
+	static final int WILD_BLUE = 0;
+	static final int WILD_RED = 1;
+	static final int WILD_GREEN = 2;
+	static final int WILD_YELLOW = 3;
+	public void wildSelection()
+	{
+		//remove all buttons
+		removeAll();
+		//label button
+		label1 = new Button("SELECT A COLOR:");
+		label1.setPreferredSize(new Dimension(700, 20));
+		add(label1);
+		//create buttons
+		wildSelect = new Button[WILD_COUNT];
+		wildSelect[WILD_BLUE] = new Button("BLUE");
+		wildSelect[WILD_BLUE].setBackground(Color.blue);
+		wildSelect[WILD_RED] = new Button("RED");
+		wildSelect[WILD_RED].setBackground(Color.red);
+		wildSelect[WILD_GREEN] = new Button("GREEN");
+		wildSelect[WILD_GREEN].setBackground(Color.green);
+		wildSelect[WILD_YELLOW] = new Button("YELLOW");
+		wildSelect[WILD_YELLOW].setBackground(Color.yellow);
+		for(int i = 0; i < actionCount; ++i)
+		{
+			wildSelect[i].setPreferredSize(new Dimension(160, 20));
+			add(wildSelect[i]);
+		}
+		
+		label2 = new Button("YOUR CURRENT HAND:");
+		label2.setPreferredSize(new Dimension(700, 20));
+		add(label2);
+		
+		drawHand();
+		
+	}
+	
 	public boolean action (Event e, Object args)
 	  { 
 		for(int i = 0; i < buttonCount; ++i)
@@ -161,6 +201,33 @@ public class GameApplet extends Applet implements Runnable
 		
 		if(cardsSet)
 		{
+			if(m_game.isGameInWildState())
+			{
+			for(int r = 0; r < WILD_COUNT; ++r)
+			{
+				if(e.target == wildSelect[r])
+				{
+					switch(r)
+					{
+					case WILD_BLUE: m_game.setWildColor('B');
+						break;
+					case WILD_RED: m_game.setWildColor('R');
+						break;
+					case WILD_GREEN: m_game.setWildColor('G');
+						break;
+					case WILD_YELLOW: m_game.setWildColor('Y');
+						break;
+					}
+					m_game.setGamePlay();
+					removeAll();
+					actionButtons();
+					drawHand();
+					
+				}
+			}
+			}
+			else
+			{
 			for(int n = 0; n < actionCount; ++n)
 			{
 				if(e.target == action[n])
@@ -248,6 +315,11 @@ public class GameApplet extends Applet implements Runnable
 								m_game.setWildColor('0');
 								//set card effect
 								m_game.setCardEffect(t, c);
+								//if a wild card was played
+								if(m_game.isGameInWildState())
+								{
+									wildSelection();
+								}
 								//set flag for endTurn()
 								m_game.setCardPlayed(true);
 							}
@@ -267,6 +339,7 @@ public class GameApplet extends Applet implements Runnable
 					}
 				--q;
 				}
+			}
 			}
 		}
 		
@@ -293,6 +366,11 @@ public class GameApplet extends Applet implements Runnable
             	actionButtons();
             	drawHand();
     			Setupdone = true;
+    			//if the first card was a wild
+    			if(m_game.isGameInWildState())
+    			{
+    				wildSelection();
+    			}
             }   
 		}
 		
@@ -303,18 +381,7 @@ public class GameApplet extends Applet implements Runnable
 	public void drawHand()
 	{
 		
-		/**
-		 * debug code
-		 */
-		if(m_game.getCurrentPlayer() == null)
-		{
-			System.out.print("NoT WoRkInG:::::::::::::::::\n");
-			return;
-		}
-		else 
-		{
-			System.out.print("WoRkInG:::::::::::::::::\n");
-		}
+
 		int current = m_game.getDiscardPile().getLastCard();
 		System.out.print("\n\n\n");
 		System.out.print(m_game.getDiscardPile().getColorAt(current));
@@ -477,7 +544,7 @@ public class GameApplet extends Applet implements Runnable
 	}
 
 	int topCardX = 300; int topCardBX = 290;//loc
-	int topCardY = 175; int topCardBY = 165;
+	int topCardY = 250; int topCardBY = 240;
 	int topCardW = 125; int topCardBW = 145;//width
 	int topCardH = 175; int topCardBH = 195;//height
 	int topCardWA = 20;//arc width
@@ -485,10 +552,10 @@ public class GameApplet extends Applet implements Runnable
 	Font topCardFont = new Font("Arial",Font.BOLD,30);
 	Font topCardLabel = new Font("Arial",Font.ITALIC,22);
 	int topCardFontX = 305;
-	int topCardFontY = 270;
+	int topCardFontY = 345;
 	int topCardFontX_Offset = 0;
 	int topCardLabelX = 335;
-	int topCardLabelY = 160;
+	int topCardLabelY = 235;
 	
 	public void	drawTopCard(Graphics g)
 	{
