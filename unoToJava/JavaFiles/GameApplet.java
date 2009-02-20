@@ -34,6 +34,7 @@ public class GameApplet extends Applet implements Runnable
 	boolean cardsSet = false;
 	Button label1;
 	Button label2;
+	Button playerName;
 
 	Label inputLabel;
 	TextField nameBlock;
@@ -53,7 +54,7 @@ public class GameApplet extends Applet implements Runnable
 
 	public void init()
 	{
-		this.setSize(new Dimension(700, 450));
+		this.setSize(new Dimension(700, 480));
 		this.setBackground(new Color(225, 128, 225));
 		this.setFont(new Font("Arial", 0, 18));
 		try {
@@ -115,8 +116,18 @@ public class GameApplet extends Applet implements Runnable
 	static final int ACTION_UNO = 2;
 	static final int ACTION_FAIL = 3;
 	
+	public void playerNameLabel()
+	{
+		playerName = new Button("CURRENT PLAYER: " + m_game.getCurrentPlayer().getName());
+		playerName.setPreferredSize(new Dimension(700, 20));
+		add(playerName);
+	}
+	
 	public void actionButtons()
 	{
+		//Current player
+		playerNameLabel();
+		
 		action = new Button[actionCount];
 		action[ACTION_DRAW] = new Button("Draw Card");
 		action[ACTION_END] = new Button("End Turn");
@@ -149,6 +160,8 @@ public class GameApplet extends Applet implements Runnable
 	{
 		//remove all buttons
 		removeAll();
+		//Current player
+		playerNameLabel();
 		//label button
 		label1 = new Button("SELECT A COLOR:");
 		label1.setPreferredSize(new Dimension(700, 20));
@@ -179,6 +192,33 @@ public class GameApplet extends Applet implements Runnable
 	
 	public boolean action (Event e, Object args)
 	  { 
+		
+		actionPlayerNum(e, args);
+		
+		if(cardsSet)
+		{
+			if(m_game.isGameInWildState())
+			{
+				actionWild(e, args);
+			}
+			else //game in play
+			{
+				actionActionButtons(e, args);
+				actionPlayCard(e, args);
+			}
+		}
+			
+		if (e.target instanceof TextField)
+		{
+			actionPlayerName(e, args);
+		}
+		
+	    return true;    // Yes, we do need this!
+	  }
+
+
+	public void actionPlayerNum(Event e, Object args)
+	{
 		for(int i = 0; i < buttonCount; ++i)
 		{
 			if (e.target == player[i] && !playerSet)
@@ -197,187 +237,179 @@ public class GameApplet extends Applet implements Runnable
 		     }
 			
 		}
-		
-		
-		if(cardsSet)
+	}
+	public void actionWild(Event e, Object args)
+	{
+		for(int r = 0; r < WILD_COUNT; ++r)
 		{
+			if(e.target == wildSelect[r])
+			{
+				switch(r)
+				{
+				case WILD_BLUE: m_game.setWildColor('B');
+					break;
+				case WILD_RED: m_game.setWildColor('R');
+					break;
+				case WILD_GREEN: m_game.setWildColor('G');
+					break;
+				case WILD_YELLOW: m_game.setWildColor('Y');
+					break;
+				}
+				m_game.setGamePlay();
+				removeAll();
+				actionButtons();
+				drawHand();
+				
+			}
+		}
+	}
+	public void actionActionButtons(Event e, Object args)
+	{
+		for(int n = 0; n < actionCount; ++n)
+		{
+			if(e.target == action[n])
+			{
+				switch(n)
+				{
+				case ACTION_DRAW:
+					if(!m_game.getHasDrawn() && !m_game.getCardPlayed()&& m_game.okayToAddCard(m_game.getCurrentPlayerLoc()))
+					{
+						m_game.getDrawDeck().drawCard(m_game.getCurrentPlayer().getHand());
+						m_game.setHasDrawn(true);
+						m_game.setCursorLock(true);
+						//clear all buttons
+						removeAll();
+						actionButtons();
+						drawLastCard();	//only let the user select the last card drawn
+						
+					}
+					break;
+				case ACTION_END:
+					//if the user has either played a card
+					//or they have drawn, but cannot play their last card
+					if(m_game.getCardPlayed() || (m_game.getHasDrawn() && !m_game.isCardLegal(m_game.getCurrentPlayer().getHand().getLastCard())))
+					{
+						m_game.endTurn();
+						removeAll();
+						actionButtons();
+						drawHand();
+					}
+					break;
+				case ACTION_UNO:
+					if(!m_game.getUnoCalled())
+					{
+						m_game.callUno();
+						removeAll();
+						actionButtons();
+						drawHand();
+					}
+					break;
+				case ACTION_FAIL:
+					if(!m_game.getUnoFailed())
+					{
+						m_game.failureToCallUno();
+						removeAll();
+						actionButtons();
+						drawHand();
+					}
+					break;
+				}
+			}
+		}
+	}
+	public void actionPlayCard(Event e, Object args)
+	{
+		int q = 0;
+		char t = ' ', c = ' ';
+		
+		//checks to see if the card is legal
+		for(int i=0; i<m_game.getCurrentPlayer().getHand().getNumOfCards(); ++i)//m_game.getCurrentPlayer().getHand().getColorAt(i) != lastColor || m_game.getCurrentPlayer().getHand().getTypeAt(i) != lastType; ++i)
+		{
+			q = m_game.getCurrentPlayer().getHand().getQuantityAt(i);
+			
+			while(q > 0)
+			{
+				if(e.target == cards[i])
+				{
+					//if the cursor is locked, set the look at to the last card drawn
+					if(m_game.getCursorLock())
+					{
+						i = m_game.getCurrentPlayer().getHand().getLastCard();
+					}
+					if(m_game.isCardLegal(i) && !m_game.getCardPlayed())
+					{
+						//play card function here
+						System.out.print("Yes, you can play the card at location ");
+						//first re-save type and color directly from deck
+						t = m_game.getCurrentPlayer().getHand().getTypeAt(i);
+						c = m_game.getCurrentPlayer().getHand().getColorAt(i);
+						//then add the card to the pile
+						m_game.getCurrentPlayer().getHand().addFromHandToPile(i, m_game.getDiscardPile());
+						System.out.println(m_game.getDiscardPile().getColorAt(m_game.getDiscardPile().getLastCard()));
+						removeAll(); //clear all
+						actionButtons();
+						drawHand(); //redraw hand
+						if(!m_game.calcWin())
+						{
+							//clear the wild color
+							m_game.setWildColor('0');
+							//set card effect
+							m_game.setCardEffect(t, c);
+							//if a wild card was played
+							if(m_game.isGameInWildState())
+							{
+								wildSelection();
+							}
+							//set flag for endTurn()
+							m_game.setCardPlayed(true);
+						}
+						else //if win, set end effect
+						{m_game.setEndEffect(t, c);}
+						{}
+					}
+					else
+					{
+						System.out.print("No, you can't play the card at location ");
+					}
+					
+					System.out.print(i);
+					System.out.print("\n");
+					
+					i=m_game.getCurrentPlayer().getHand().getNumOfCards();//checks to see if the card is legal
+				}
+			--q;
+			}
+		}
+	}
+	public void actionPlayerName(Event e, Object args)
+	{
+		if (e.target == nameBlock && runOnce == true)
+        {
+    		PlayerNames[playerCounter] = nameBlock.getText(); 
+    		nameBlock.setText("");
+    		playerCounter++;
+    		runOnce = false;
+    		//m_game.setPlayerNames(PlayerNames);
+    		removeAll();//clean
+    		playerNames();//print new label and text field
+        	
+		}
+        if(playerCounter == numOfPlayers && Setupdone == false)
+        {
+        	m_game.setPlayerNames(PlayerNames);
+        	removeAll();
+        	//TODO first game drawing start here
+        	actionButtons();
+        	drawHand();
+			Setupdone = true;
+			//if the first card was a wild
 			if(m_game.isGameInWildState())
 			{
-			for(int r = 0; r < WILD_COUNT; ++r)
-			{
-				if(e.target == wildSelect[r])
-				{
-					switch(r)
-					{
-					case WILD_BLUE: m_game.setWildColor('B');
-						break;
-					case WILD_RED: m_game.setWildColor('R');
-						break;
-					case WILD_GREEN: m_game.setWildColor('G');
-						break;
-					case WILD_YELLOW: m_game.setWildColor('Y');
-						break;
-					}
-					m_game.setGamePlay();
-					removeAll();
-					actionButtons();
-					drawHand();
-					
-				}
+				wildSelection();
 			}
-			}
-			else
-			{
-			for(int n = 0; n < actionCount; ++n)
-			{
-				if(e.target == action[n])
-				{
-					switch(n)
-					{
-					case ACTION_DRAW:
-						if(!m_game.getHasDrawn() && !m_game.getCardPlayed()&& m_game.okayToAddCard(m_game.getCurrentPlayerLoc()))
-						{
-							m_game.getDrawDeck().drawCard(m_game.getCurrentPlayer().getHand());
-							m_game.setHasDrawn(true);
-							m_game.setCursorLock(true);
-							//clear all buttons
-							removeAll();
-							actionButtons();
-							drawLastCard();	//only let the user select the last card drawn
-							
-						}
-						break;
-					case ACTION_END:
-						//if the user has either played a card
-						//or they have drawn, but cannot play their last card
-						if(m_game.getCardPlayed() || (m_game.getHasDrawn() && !m_game.isCardLegal(m_game.getCurrentPlayer().getHand().getLastCard())))
-						{
-							m_game.endTurn();
-							removeAll();
-							actionButtons();
-							drawHand();
-						}
-						break;
-					case ACTION_UNO:
-						if(!m_game.getUnoCalled())
-						{
-							m_game.callUno();
-							removeAll();
-							actionButtons();
-							drawHand();
-						}
-						break;
-					case ACTION_FAIL:
-						if(!m_game.getUnoFailed())
-						{
-							m_game.failureToCallUno();
-							removeAll();
-							actionButtons();
-							drawHand();
-						}
-						break;
-					}
-				}
-			}
-			int q = 0;
-			char t = ' ', c = ' ';
-			
-			//checks to see if the card is legal
-			for(int i=0; i<m_game.getCurrentPlayer().getHand().getNumOfCards(); ++i)//m_game.getCurrentPlayer().getHand().getColorAt(i) != lastColor || m_game.getCurrentPlayer().getHand().getTypeAt(i) != lastType; ++i)
-			{
-				q = m_game.getCurrentPlayer().getHand().getQuantityAt(i);
-				
-				while(q > 0)
-				{
-					if(e.target == cards[i])
-					{
-						//if the cursor is locked, set the look at to the last card drawn
-						if(m_game.getCursorLock())
-						{
-							i = m_game.getCurrentPlayer().getHand().getLastCard();
-						}
-						if(m_game.isCardLegal(i) && !m_game.getCardPlayed())
-						{
-							//play card function here
-							System.out.print("Yes, you can play the card at location ");
-							//first re-save type and color directly from deck
-							t = m_game.getCurrentPlayer().getHand().getTypeAt(i);
-							c = m_game.getCurrentPlayer().getHand().getColorAt(i);
-							//then add the card to the pile
-							m_game.getCurrentPlayer().getHand().addFromHandToPile(i, m_game.getDiscardPile());
-							System.out.println(m_game.getDiscardPile().getColorAt(m_game.getDiscardPile().getLastCard()));
-							removeAll(); //clear all
-							actionButtons();
-							drawHand(); //redraw hand
-							if(!m_game.calcWin())
-							{
-								//clear the wild color
-								m_game.setWildColor('0');
-								//set card effect
-								m_game.setCardEffect(t, c);
-								//if a wild card was played
-								if(m_game.isGameInWildState())
-								{
-									wildSelection();
-								}
-								//set flag for endTurn()
-								m_game.setCardPlayed(true);
-							}
-							else //if win, set end effect
-							{m_game.setEndEffect(t, c);}
-							{}
-						}
-						else
-						{
-							System.out.print("No, you can't play the card at location ");
-						}
-						
-						System.out.print(i);
-						System.out.print("\n");
-						
-						i=m_game.getCurrentPlayer().getHand().getNumOfCards();//checks to see if the card is legal
-					}
-				--q;
-				}
-			}
-			}
-		}
-		
-		
-		if (e.target instanceof TextField)
-		{
-			
-            if (e.target == nameBlock && runOnce == true)
-            {
-        		PlayerNames[playerCounter] = nameBlock.getText(); 
-        		nameBlock.setText("");
-        		playerCounter++;
-        		runOnce = false;
-        		//m_game.setPlayerNames(PlayerNames);
-        		removeAll();//clean
-        		playerNames();//print new label and text field
-            	
-			}
-            if(playerCounter == numOfPlayers && Setupdone == false)
-            {
-            	m_game.setPlayerNames(PlayerNames);
-            	removeAll();
-            	//TODO first game drawing start here
-            	actionButtons();
-            	drawHand();
-    			Setupdone = true;
-    			//if the first card was a wild
-    			if(m_game.isGameInWildState())
-    			{
-    				wildSelection();
-    			}
-            }   
-		}
-		
-	    return true;    // Yes, we do need this!
-	  }
-
-
+        }   
+	}
+	
 	public void drawHand()
 	{
 		
@@ -544,7 +576,7 @@ public class GameApplet extends Applet implements Runnable
 	}
 
 	int topCardX = 300; int topCardBX = 290;//loc
-	int topCardY = 250; int topCardBY = 240;
+	int topCardY = 280; int topCardBY = 270;
 	int topCardW = 125; int topCardBW = 145;//width
 	int topCardH = 175; int topCardBH = 195;//height
 	int topCardWA = 20;//arc width
@@ -552,10 +584,10 @@ public class GameApplet extends Applet implements Runnable
 	Font topCardFont = new Font("Arial",Font.BOLD,30);
 	Font topCardLabel = new Font("Arial",Font.ITALIC,22);
 	int topCardFontX = 305;
-	int topCardFontY = 345;
+	int topCardFontY = 375;
 	int topCardFontX_Offset = 0;
 	int topCardLabelX = 335;
-	int topCardLabelY = 235;
+	int topCardLabelY = 265;
 	
 	public void	drawTopCard(Graphics g)
 	{
