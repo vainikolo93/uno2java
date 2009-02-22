@@ -7,7 +7,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Label;
 import java.awt.TextField;
-import java.io.IOException;
+
 
 
 
@@ -55,19 +55,19 @@ public class GameApplet extends Applet implements Runnable
 		this.setSize(new Dimension(700, 480));
 		this.setBackground(new Color(225, 128, 225));
 		this.setFont(new Font("Arial", 0, 18));
-		try {
+//		try {
 			
-			m_game = new Game(5, 
-					"../unoDeck.txt");
+//			m_game = new Game(5, 
+//					"../unoDeck.txt");
 					//f.getAbsolutePath()+"./unoDeck.txt");
 					//"C:/Eclipse/workspace/uno2Java/unoDeck.txt");
-		} catch (IOException e) {
+//		} catch (IOException e) {
 			//fail-safe
 			//ideally we want to read from the file, because thats the way the 
 			//program was originally designed in DOS, but if for some reason, java can't
 			//locate the text file, we have the deck hard-coded in
 			m_game = new Game(5);
-		}
+//		}
 		playerNumButtons();
 		addKeyListener(m_game.getUI());
 		addMouseListener(m_game.getUI());
@@ -88,7 +88,10 @@ public class GameApplet extends Applet implements Runnable
 		//m_game.draw(g);	
 		if(Setupdone)
 		{
-			drawTopCard(g);
+			if(!m_game.isGameInRoundOverState())
+			{
+				drawTopCard(g);
+			}
 			drawHUD(g);
 			if(m_game.isGameInRoundOverState())
 			{
@@ -261,6 +264,7 @@ public class GameApplet extends Applet implements Runnable
 			removeAll();
 			actionButtons();
 			drawHand();
+			Setupdone = true;
 		}
 		if(cardsSet)
 		{
@@ -369,6 +373,9 @@ public class GameApplet extends Applet implements Runnable
 						//actionButtons();
 						//drawHand();
 						loadHotSeat();
+						System.out.println("\nDeck: " + m_game.getDrawDeck().getNumOfCards());
+						System.out.println("\nDiscard: " + m_game.getDiscardPile().getNumOfCards());
+						System.out.println("\nCurrent Player: " + m_game.getCurrentPlayer().getHand().getNumOfCards());
 					}
 					break;
 				case ACTION_UNO:
@@ -387,6 +394,7 @@ public class GameApplet extends Applet implements Runnable
 						removeAll();
 						actionButtons();
 						drawHand();
+						//m_game.reload();
 					}
 					break;
 				}
@@ -450,6 +458,7 @@ public class GameApplet extends Applet implements Runnable
 							if(m_game.isGameInRoundOverState())
 							{
 								loadRoundOverButton();
+								//Setupdone = false;
 							}
 							else //game over
 							{
@@ -629,6 +638,7 @@ public class GameApplet extends Applet implements Runnable
 			{
 			m_game.clearUnos();//clear all old uno calls
 			}
+
 			
 		}
 		
@@ -747,7 +757,16 @@ public class GameApplet extends Applet implements Runnable
 		}
 		//set color for font
 		if(color == 'W')
-			g.setColor(Color.white);
+		{
+			switch(m_game.getWildColor())
+			{
+			case '0': g.setColor(Color.white); break;
+			case 'B': g.setColor(Color.blue); break;
+			case 'G': g.setColor(Color.green); break;
+			case 'R': g.setColor(Color.red); break;
+			case 'Y': g.setColor(Color.yellow); break;
+			}
+		}
 		else
 			g.setColor(Color.black);
 		

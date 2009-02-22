@@ -179,7 +179,10 @@ public class Deck
 			{
 				m_data[i].m_color = 'W';
 			}
-			
+			if(i > 10)//TODO REMOVE THIS MCUGLY
+			{
+				//m_data[i].m_quantity = 0; 
+			}
 			//update total card quantity
 			m_numOfCards += m_data[i].m_quantity;
 		}
@@ -419,8 +422,8 @@ public class Deck
 			{
 				addOtherToThis(r, other);
 			}
+			other.debug();
 		}
-		other.debug();
 	}
 	//add another deck to this deck
 	//this is used to shuffle (i.e. add the discard pile back to the draw deck)
@@ -441,8 +444,7 @@ public class Deck
 				m_data[r].m_quantity++;
 				//remove from the other deck
 				other.m_data[card].m_quantity--;
-				//isAdded = true;
-				System.out.print("notADDING:::::::::::::::::::::::\n");
+				isAdded = true;
 			}
 		}
 		
@@ -450,11 +452,20 @@ public class Deck
 		//add it to the end
 		if(!isAdded)
 		{
+			//if(m_size < m_data.length){
 			//TODO analyze this section for round over array exception
+			m_data[m_size].m_type = other.m_data[card].m_type;
+			m_data[m_size].m_color = other.m_data[card].m_color;
+			m_data[m_size].m_quantity = 1;
+			other.m_data[card].m_quantity--;
+			/*}
+			else
+			{
 			m_data[m_size-1].m_type = other.m_data[card].m_type;
 			m_data[m_size-1].m_color = other.m_data[card].m_color;
 			m_data[m_size-1].m_quantity = 1;
 			other.m_data[card].m_quantity--;
+			}*/
 		}
 	}
 	//return the location of the last card added to a deck
@@ -538,6 +549,14 @@ public class Deck
 			}
 		}
 		return val;
+	}
+	
+	public void clearQuantity()
+	{
+		for(int r = 0; r < m_data.length; ++r)
+		{
+			m_data[r].m_quantity = 0;
+		}
 	}
 }
 
