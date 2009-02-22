@@ -676,14 +676,17 @@ public class Game extends JFrame implements ActionListener
 	public void reload()
 	{
 		//shuffle the pile back into the deck
-		System.out.println("I broke shuffling discard into deck");
-		m_drawDeck.shuffle(m_discardPile);
+		//m_drawDeck.shuffle(m_discardPile);
+		m_drawDeck.loadMcNasty();
+		//m_discardPile.load(m_drawDeck);
+		m_discardPile.clearQuantity();
 		
 		//shuffle all hands back into deck
 		for(int i = 0; i < m_playerCount; ++i)
 		{
-			System.out.println("I broke shuffling hands into deck");
 			m_drawDeck.shuffle(m_playerList[i].getHand());
+			//m_playerList[i].load(m_drawDeck);
+			m_playerList[i].getHand().clearQuantity();
 		}
 		
 		//set direction of game player
@@ -775,7 +778,7 @@ public class Game extends JFrame implements ActionListener
 	{
 		//next player must still draw+2 and wild+4
 		//calculate the next player, without actually assigning the player
-		int nextP = 0; //set to invalid
+		int nextP = -1; //set to invalid
 		if(m_direction == FORWARD)
 		{
 			//loop through players
@@ -784,7 +787,7 @@ public class Game extends JFrame implements ActionListener
 			else
 			{nextP = 0;}
 		}
-		else if (m_direction == BACKWARD)
+		if (m_direction == BACKWARD)
 		{
 			if(m_currentPlayer-1 >= 0)
 			{nextP = m_currentPlayer-1;}
