@@ -17,7 +17,8 @@ public class Deck
 {
 	private card[] m_data; //data
 	private int m_size; //the "visible" size of the deck
-	//do not need a length variable, can use m_data.length to access the actual length
+	//using m_data.length was throwing array exceptions, so we use m_length
+	private int m_length; //the length of the deck
 	private int m_numOfCards; //total number of cards left in the deck
 	private int m_lastCard; //saves the location of the last card added to the deck
 	
@@ -25,6 +26,7 @@ public class Deck
 	{
 		m_data = null;
 		m_size = 0;
+		m_length = 0;
 		m_numOfCards = 0;
 	}
 	//constructor that loads the deck
@@ -32,6 +34,7 @@ public class Deck
 	{
 		m_data = null;
 		m_size = 0;
+		m_length = 0;
 		m_numOfCards = 0;
 		//load(a_filename);
 		FileReader f = new FileReader(a_filename);
@@ -41,8 +44,9 @@ public class Deck
 	//another deck (used for creating player hands and discard pile
 	public Deck(Deck other)
 	{
-		m_data = new card[other.m_data.length];
-		for(int r = 0; r < m_data.length; ++r)
+		m_length = other.m_length;
+		m_data = new card[m_length];
+		for(int r = 0; r < m_length; ++r)
 		{
 			//create each card
 			m_data[r] = new card();
@@ -74,10 +78,10 @@ public class Deck
 	//REALLY BAD!!!!!
 	public void loadMcNasty() 
 	{
-		m_size = 54;
-		m_data = new card[m_size];
+		m_length = m_size = 54;
+		m_data = new card[m_length];
 		
-		for(int i = 0; i < m_size; ++i)
+		for(int i = 0; i < m_length; ++i)
 		{
 			//create new card
 			m_data[i] = new card();
@@ -181,7 +185,7 @@ public class Deck
 			}
 			if(i > 10)//TODO REMOVE THIS MCUGLY
 			{
-				//m_data[i].m_quantity = 0; 
+				m_data[i].m_quantity = 0; 
 			}
 			//update total card quantity
 			m_numOfCards += m_data[i].m_quantity;
@@ -194,11 +198,12 @@ public class Deck
 	public void load(InputStreamReader f) throws IOException
 	{
 		//input size and create array
-		m_size = readNextInt(f);
-		m_data = new card[m_size];
+		m_length = readNextInt(f);
+		m_size = m_length;
+		m_data = new card[m_length];
 
 				
-		for(int r = 0; r < m_data.length; ++r)
+		for(int r = 0; r < m_length; ++r)
 		{
 			//create each card
 			m_data[r] = new card();
@@ -267,8 +272,9 @@ public class Deck
 	//load a blank deck based off the size of another deck
 	public void load(Deck other)
 	{
-		m_data = new card[other.m_data.length];
-		for(int r = 0; r < m_data.length; ++r)
+		m_length = other.m_length;
+		m_data = new card[m_length];
+		for(int r = 0; r < m_length; ++r)
 		{
 			//make sure the new deck is empty
 			m_data[r].m_type = '0';
@@ -281,7 +287,7 @@ public class Deck
 	public void calcNumOfCards()
 	{
 		int total = 0;
-		for(int r = 0; r < m_data.length; ++r)
+		for(int r = 0; r < m_length; ++r)
 		{
 			total += m_data[r].m_quantity;
 		}
@@ -291,7 +297,7 @@ public class Deck
 	public void calcSize()
 	{
 		int size = 0;
-		for(int r = 0; r < m_data.length; ++r)
+		for(int r = 0; r < m_length; ++r)
 		{
 			//if there is a card of this type & color
 			if(m_data[r].m_quantity > 0)
@@ -305,7 +311,7 @@ public class Deck
 	//return the length of the deck
 	public int getLength()
 	{
-		return m_data.length;
+		return m_length;
 	}
 	//calculate and return the current size
 	public int getSize()
@@ -382,12 +388,25 @@ public class Deck
 		//if the card is not in the deck, add it to the end
 		if(!isAdded)
 		{
+			try
+			{
 			other.m_data[other.m_size].m_type = m_data[card].m_type;
 			other.m_data[other.m_size].m_color = m_data[card].m_color;
 			other.m_data[other.m_size].m_quantity = 1;
 			m_data[card].m_quantity--;
 			//save location of last card added
 			other.m_lastCard = other.m_size;
+			}
+			catch(Exception e)
+			{
+				other.m_data[other.m_size-1].m_type = m_data[card].m_type;
+				other.m_data[other.m_size-1].m_color = m_data[card].m_color;
+				other.m_data[other.m_size-1].m_quantity = 1;
+				m_data[card].m_quantity--;
+				//save location of last card added
+				other.m_lastCard = other.m_size-1;
+			}
+			
 		}
 	}
 	//after a card's quantity is reduced to zero
@@ -399,7 +418,7 @@ public class Deck
 		temp.m_type = m_data[loc].m_type;
 		temp.m_color = m_data[loc].m_color;
 		
-		for(int r = loc; r < m_data.length - 1; ++r)
+		for(int r = loc; r < m_length - 1; ++r)
 		{
 			//move each element up one
 			m_data[r] = m_data[r+1];
@@ -452,20 +471,10 @@ public class Deck
 		//add it to the end
 		if(!isAdded)
 		{
-			//if(m_size < m_data.length){
-			//TODO analyze this section for round over array exception
 			m_data[m_size].m_type = other.m_data[card].m_type;
 			m_data[m_size].m_color = other.m_data[card].m_color;
 			m_data[m_size].m_quantity = 1;
 			other.m_data[card].m_quantity--;
-			/*}
-			else
-			{
-			m_data[m_size-1].m_type = other.m_data[card].m_type;
-			m_data[m_size-1].m_color = other.m_data[card].m_color;
-			m_data[m_size-1].m_quantity = 1;
-			other.m_data[card].m_quantity--;
-			}*/
 		}
 	}
 	//return the location of the last card added to a deck
@@ -529,7 +538,7 @@ public class Deck
 		}
 	}
 	
-	//END OF CLASS
+	//add a type and color at a specific location
 	public void add(int loc, char a_type, char a_color)
 	{
 		m_data[loc].m_type = a_type;
@@ -539,7 +548,7 @@ public class Deck
 	public int getLocation(char a_type, char a_color)
 	{
 		int val = -1;
-		for(int n = 0; n < m_data.length; ++n)
+		for(int n = 0; n < m_length; ++n)
 		{
 			//if the color and type match
 			if(m_data[n].m_type == a_type && m_data[n].m_color == a_color)
@@ -550,11 +559,21 @@ public class Deck
 		}
 		return val;
 	}
-	
+	//clear all quantities in the deck
 	public void clearQuantity()
 	{
-		for(int r = 0; r < m_data.length; ++r)
+		for(int r = 0; r < m_length; ++r)
 		{
+			m_data[r].m_quantity = 0;
+		}
+	}
+	//clear everything in the deck
+	public void clearAll()
+	{
+		for(int r = 0; r < m_length; ++r)
+		{
+			m_data[r].m_type = '0';
+			m_data[r].m_color = '0';
 			m_data[r].m_quantity = 0;
 		}
 	}

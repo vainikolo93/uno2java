@@ -1,22 +1,7 @@
 
-import java.awt.Graphics;
 
-import java.awt.Button;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.Random;
-
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
 
 
 //handles the data for the cursor
@@ -28,8 +13,7 @@ class cursor
 	int m_lookAt;
 }
 
-@SuppressWarnings("serial")
-public class Game extends JFrame implements ActionListener
+public class Game
 {	
 	private Deck m_drawDeck, m_discardPile;
 	private Player[] m_playerList;
@@ -37,20 +21,18 @@ public class Game extends JFrame implements ActionListener
 	public int m_currentPlayer;
 	private int m_direction;
 	private int m_gamestate;
-	private char m_input;
 	private char m_wildColor;
+	@SuppressWarnings("unused")
 	private boolean hasDrawn, cursorLocked, cardPlayed, skipEffect, wildSelect;
 	private boolean m_wantsToQuit;
 	private boolean unoCalled, unoFailed;
 	int m_round;
-	JFrame jf = new JFrame("title");
 	
 	
 	//default constructor
 	public Game()
 	{
 		m_playerCount = m_currentPlayer = -1;
-		m_input = '0';
 		m_wildColor = '0';
 		m_round = 0;
 		hasDrawn = cursorLocked = cardPlayed = skipEffect = false;
@@ -140,8 +122,6 @@ public class Game extends JFrame implements ActionListener
 			{
 				m_drawDeck.drawCard(m_playerList[i].getHand());
 			}
-			//TODO REMOVE THIS DEBUG
-			m_playerList[i].getHand().debug();
 		}
 		
 		//randomly select starting player
@@ -172,172 +152,7 @@ public class Game extends JFrame implements ActionListener
 		//after the first card is drawn, set its effect
 		char t = m_discardPile.getTypeAt(m_discardPile.getLastCard());
 		char c = m_discardPile.getColorAt(m_discardPile.getLastCard());
-		setInitEffect(t, c);
-		
-		//TODO Finish cursor limits
-		//m_cursor.m_icon = char(16);
-		//setCursorLimits(m_playerList[m_currentPlayer].getHand().getNumOfCards());
-	
-		//TODO REMOVE THIS DEBUG
-		System.out.println("Starting Player: " + m_currentPlayer + " Card Type: " + t +
-				" Card Color: " + c + "\n");
-		
-	}
-	//TODO loadMasks()
-	
-	//TODO handleInput()
-	//handles input
-	public void handleInput(KeyEvent e)
-	//public void keyPressed(KeyEvent e)
-	{
-		switch(e.getKeyChar())
-		{
-			//quit
-		case 'q': m_wantsToQuit = true; break;  
-
-		case ' ': //space bar
-		case 'w':
-		case 'a':
-		case 's':
-		case 'd':
-		case '\r': //enter
-		case 'p':
-		case 'u':
-		case 'x':
-		case 'm':
-		case '1': 
-		case '2': 
-		case '3': 
-		case '4':
-			m_input = e.getKeyChar(); processGameLogic(); break;
-		}
-		
-	}
-	
-	//TODO CURSOR setCursorLimit(), moveCursor(), lockCursorToDrawnCard()
-	
-	//add the card the cursor is pointing to, to the pile
-	//TODO ADD CARD addSelectedCardToPile()
-	
-	//process input
-	public void processGameLogic()
-	{
-		if(m_input != '0')
-		{
-			if(m_gamestate == STATE_PLAY)
-			{
-				processGamePlay();
-			}
-			else if(m_gamestate == STATE_WILD_SELECT)
-			{
-				processGameWild();
-			}
-			else if(m_gamestate == STATE_HOT_SEAT
-					|| m_gamestate == STATE_MENU)
-			{
-				//space bar exits both these states
-				//and resumes game play
-				if(m_input == ' ')
-				{
-					m_gamestate = STATE_PLAY;
-					//TODO CLEAR AREA
-				}
-			}
-			else if(m_gamestate == STATE_ROUND_OVER)
-			{
-				//space bar reloads the game for the next round
-				if(m_input == ' ')
-				{
-					reload();
-				}
-			}
-			m_input = '0';
-		}
-		
-		clearUnos(); //clear any old UNOs
-	}
-	//process input for when the game is in play state
-	public void processGamePlay()
-	{
-		switch(m_input)
-		{
-		//space bar
-		case ' ': 
-			//if player has not drawn yet this turn
-			//and they have not played a card
-			if(!hasDrawn && !cardPlayed && okayToAddCard(m_currentPlayer))
-			{
-				m_drawDeck.drawCard(m_playerList[m_currentPlayer].getHand());
-				hasDrawn = true;
-				//TODO REMOVE THIS DEBUG
-				m_playerList[m_currentPlayer].getHand().debug();
-				//TODO CURSOR
-				//lock cursor to last card
-				//lockCursorToDrawnCard();
-				
-			}
-			break;
-		//TODO CURSOR
-		//case 'w': moveCursor(MOVE_UP, num); break;
-		//case 's': moveCursor(MOVE_DOWN, num); break;
-		//case 'a': moveCursor(MOVE_LEFT, num); break;
-		//case 'd': moveCursor(MOVE_RIGHT, num); break;
-		//TODO ADD CARD
-		//case '\r': addSelectedCardToPile(); break;
-		//pass / end turn
-		case 'p': endTurn(); break;
-		case 'u': callUno(); break;	
-		case 'x': failureToCallUno(); break;
-		case 'm': m_gamestate = STATE_MENU; break;
-		}
-	}
-	//process input for when the game is in wild state
-	public void processGameWild()
-	{
-		if(wildSelect)
-		{
-			//only when on the wild selection screen
-			switch(m_input)
-			{
-			case '1': //blue
-				m_wildColor = 'B';			//set color
-				m_gamestate = STATE_PLAY;	//resume game play
-				break;
-			case '2': //green
-				m_wildColor = 'G';
-				m_gamestate = STATE_PLAY;
-				break;
-			case '3': //red
-				m_wildColor = 'R';
-				m_gamestate = STATE_PLAY;
-				break;
-			case '4': //yellow
-				m_wildColor = 'Y';
-				m_gamestate = STATE_PLAY;
-				break;
-			case ' '://toggle view
-				wildSelect = false;
-				//clear the area
-				//TODO CLEAR
-				//clearArea(COLOR_WHITE, PLAYER_HAND_X-1, SCREEN_WIDTH-2, PLAYER_HAND_Y, SCREEN_HEIGHT-2);
-				break;
-			}
-		}
-		else if(m_input == ' ')
-		{
-			wildSelect = true;
-			//clear the area
-			//TODO CLEAR
-			//clearArea(COLOR_WHITE, PLAYER_HAND_X-1, SCREEN_WIDTH-2, PLAYER_HAND_Y, SCREEN_HEIGHT-2);
-		}
-
-		//if the state has been changed
-		if(m_gamestate == STATE_PLAY)
-		{
-			//clear the area
-			//TODO CLEAR
-			//clearArea(COLOR_WHITE, PLAYER_HAND_X-1, SCREEN_WIDTH-2, PLAYER_HAND_Y, SCREEN_HEIGHT-2);
-		}
+		setInitEffect(t, c);		
 	}
 	
 	//check to make sure the card is legal to play
@@ -491,9 +306,6 @@ public class Game extends JFrame implements ActionListener
 			if(okayToAddCard(player))
 			{m_drawDeck.drawCard(m_playerList[player].getHand());}
 		}
-		//reset cursor limit after adding new cards
-		//TODO CURSOR
-		//setCursorLimits(m_playerList[m_currentPlayer].getHand().getNumOfCards());
 	}
 	//a player calls uno when they have one card left in their hand
 	public void callUno()
@@ -574,9 +386,7 @@ public class Game extends JFrame implements ActionListener
 		cardPlayed = false;
 		unoCalled = false;
 		unoFailed = false;
-		
-		//TODO CURSOR
-		//setCursorLimits(m_playerList[m_currentPlayer].getHand().getNumOfCards());
+
 	}
 	//clear any old UNO flags
 	public void clearUnos()
@@ -676,17 +486,18 @@ public class Game extends JFrame implements ActionListener
 	public void reload()
 	{
 		//shuffle the pile back into the deck
+		//TODO REMOVE JUNK
 		//m_drawDeck.shuffle(m_discardPile);
 		m_drawDeck.loadMcNasty();
 		//m_discardPile.load(m_drawDeck);
-		m_discardPile.clearQuantity();
+		m_discardPile.clearAll();
 		
 		//shuffle all hands back into deck
 		for(int i = 0; i < m_playerCount; ++i)
 		{
-			m_drawDeck.shuffle(m_playerList[i].getHand());
+			//m_drawDeck.shuffle(m_playerList[i].getHand());
 			//m_playerList[i].load(m_drawDeck);
-			m_playerList[i].getHand().clearQuantity();
+			m_playerList[i].getHand().clearAll();
 		}
 		
 		//set direction of game player
@@ -732,10 +543,6 @@ public class Game extends JFrame implements ActionListener
 		char t = m_discardPile.getTypeAt(m_discardPile.getLastCard());
 		char c = m_discardPile.getColorAt(m_discardPile.getLastCard());
 		setInitEffect(t, c);
-		
-		//TODO Finish cursor limits
-		//m_cursor.m_icon = char(16);
-		//setCursorLimits(m_playerList[m_currentPlayer].getHand().getNumOfCards());
 	}
 	//set the effect for the initial card in the pile
 	public void setInitEffect(char type, char color) 
@@ -805,7 +612,16 @@ public class Game extends JFrame implements ActionListener
 		for(int n = 0; n < effect; ++n)
 		{
 			if(okayToAddCard(nextP))
-			{m_drawDeck.drawCard(m_playerList[nextP].getHand());}
+			{
+				//get the color and type of the last card
+				char c = m_playerList[nextP].getHand().getColorAt(m_playerList[nextP].getHand().getLastCard());
+				char t = m_playerList[nextP].getHand().getTypeAt(m_playerList[nextP].getHand().getLastCard());
+				//add card
+				m_drawDeck.drawCard(m_playerList[nextP].getHand());
+				//increment score
+				m_playerList[m_currentPlayer].incrementScore(scoreChart(c, t));
+				
+			}
 		}
 	}
 	//make sure it is okay to add a card before it is placed into a player's hand
@@ -857,321 +673,134 @@ public class Game extends JFrame implements ActionListener
 	//new functions to run the game in an applet
 	NeatWindow m_ui; //display the object and user interface
 
-	public void draw(Graphics g)
-	{
-		jf.repaint();
-		
-	}
-
 	public NeatWindow getUI()
 	{
 		return m_ui;
 	}
-	/*public void draw(Graphics g)
-	{
-		System.out.println("Testing");
-		g.drawString("Testing", 10, 10);
-		int xx = m_playerList[m_currentPlayer].getHand().getLastCard();
-		g.drawString("Last Card" + xx, 10, 20);
-	}*/
 	//fail safe
-	public Game(int a_playerCount)
+	public Game(int flag)
 	{
+		//ignore flag, it is only used to call this contructor
 		this();
-		
-		//m_playerCount = a_playerCount;
-		
+
 		m_drawDeck = new Deck();
 		m_drawDeck.loadMcNasty();
 		m_discardPile = new Deck(m_drawDeck);
-		//m_playerList = new Player [m_playerCount];
-		
-		//for(int n = 0; n < m_playerCount; ++n)
-		//{
-		//	m_playerList[n] = new Player(m_drawDeck);
-		//}
 	}
-
-	public void gamesetupdraw()
-	{
-		//http://chortle.ccsu.edu/CS151/Notes/chap58/ch58_13.html
-		
-		JButton playerb[] = new JButton[9];
-		jf.setSize(400, 200);
-		int buttonnum = 2;
-		for(int i = 0; i < 9; ++i)
-		{
-		playerb[i] = new JButton(" " + buttonnum);
-		playerb[i].addActionListener( this);
-		jf.getContentPane().add( playerb[i] );
-		buttonnum++;
-		}
-		jf.getContentPane().setLayout(new FlowLayout());
-			
-		jf.getContentPane().add(m_ui);
-		
-		
-		// need to be very specific about key listening...
-		jf.addKeyListener(m_ui);
-		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		jf.setVisible(true);
-		
-		
-		
-	}
-	
+	//returns player count
 	public int getPlayerCount()
 	{
 		return m_playerCount;
 	}
-
+	//returns the player at this location in the player list
 	public Player getPlayerAt(int n)
 	{
 		return m_playerList[n];
 	}
-	
-	public void drawHand()
-
-	{
-
-		int current = m_discardPile.getLastCard();
-		System.out.print("\n\n\n");
-		System.out.print(m_discardPile.getColorAt(current));
-		System.out.print(" ");
-		System.out.print(m_discardPile.getTypeAt(current));
-		System.out.print("\n =)");
-		JPanel buttons = new JPanel();
-
-		Player player = m_playerList[m_currentPlayer];
-		Button cards[] = new Button[player.getHand().getSize()];
-		
-		
-		int i=0;
-		
-		//sets the color for each card
-		for(i=0; i<player.getHand().getSize(); ++i)
-		{
-			cards[i] = new Button("" + player.getHand().getColorAt(i) 
-					+ " " + player.getHand().getTypeAt(i));
-			switch(player.getHand().getColorAt(i))
-			{
-			case 'B':	cards[i].setBackground(new Color(0, 0, 255));	
-						cards[i].setForeground(new Color(0, 0, 0));	break;
-			case 'R':	cards[i].setBackground(new Color(255, 0, 0));	
-						cards[i].setForeground(new Color(0, 0, 0));	break;
-			case 'G':	cards[i].setBackground(new Color(0, 255, 0));	
-						cards[i].setForeground(new Color(0, 0, 0));	break;
-			case 'Y':	cards[i].setBackground(new Color(255, 255, 0));	
-						cards[i].setForeground(new Color(0, 0, 0));	break;
-			case 'W':	cards[i].setBackground(new Color(0, 0, 0));	
-						cards[i].setForeground(new Color(255, 255, 255));	break;
-			}
-			cards[i].addActionListener(this);
-			cards[i].setPreferredSize(new Dimension(75, 20));
-			buttons.add(cards[i]);
-		}
-		
-		//sets the layout
-		buttons.setLayout(new BoxLayout(buttons, 1));
-		/*
-		//sets the action for each card
-		for(i=0; i<player.getHand().getSize(); ++i)
-		{
-			currentCard = i;
-			
-			//sets the action
-			cards[i].setAction(
-					new AbstractAction("" + player.getHand().getColorAt(i) 
-					+ "" + player.getHand().getTypeAt(i))
-					{
-						public void actionPerformed(ActionEvent e) 
-						{
-							
-							
-							String str = e.getActionCommand();
-							int temp = 0;
-							int color = str.charAt(0);
-							int type = str.charAt(1);
-							
-							//finds out which card it is
-							for(int i=0; i<m_playerList[m_currentPlayer].getHand().getSize(); ++i)
-							{
-								if(m_playerList[m_currentPlayer].getHand().getColorAt(i) == color
-								&& m_playerList[m_currentPlayer].getHand().getTypeAt(i) == type)
-								{
-									temp = i;
-									i=m_playerList[m_currentPlayer].getHand().getSize();
-								}
-							}
-							
-							//checks to see if the card is legal
-							if(isCardLegal(new Integer(temp)))
-							{
-								//play card function here
-								System.out.print("Yes, you can play the card at location ");
-							}
-							else
-							{
-								System.out.print("No, you can't play the card at location ");
-							}
-							
-
-							System.out.print(temp);
-							System.out.print("\n");
-						}
-					}
-			);
-		}
-		
-		jf.getContentPane().add(buttons);
-		*/
-	}
-	//private int currentCard;
-	
-	//@Override
-	public void actionPerformed(ActionEvent e)
-	{
-		 String str = e.getActionCommand();
-		 
-		if (str.equals(" 2")){ m_playerCount = 2; System.out.println("2222222");}
-		else if (str.equals(" 3")){ m_playerCount = 3;}
-		else if (str.equals(" 4")){ m_playerCount = 4;}
-		else if (str.equals(" 5")){ m_playerCount = 5;}
-		else if (str.equals(" 6")){ m_playerCount = 6;}
-		else if (str.equals(" 7")){ m_playerCount = 7;}
-		else if (str.equals(" 8")){ m_playerCount = 8;}
-		else if (str.equals(" 9")){ m_playerCount = 9;}
-		else if (str.equals(" 10")){ m_playerCount = 10;}
-		 
-		jf.getContentPane().removeAll();
-		jf.repaint();
-
-		//http://leepoint.net/notes-java/GUI/components/30textfield/11textfield.html
-		JTextField textnamebox = new JTextField(10);
-		jf.getContentPane().add(textnamebox);
-		
-		textnamebox.addActionListener(
-			new ActionListener()
-			{
-		        public void actionPerformed(ActionEvent e)
-		        {
-		        	for(int i = 0; i < m_playerCount; ++i)
-		    		{
-		        		//m_playerList[0].setNameBetter(getText());
-		        		m_playerList[0].printName();
-			        	jf.repaint();
-			            //TODO
-		    		}
-		        }
-		    });
-		
-		m_playerList[0].setNameBetter(textnamebox.getText());
-		
-		m_playerList[0].printName();
-		
-		jf.repaint();
-		 
-		//System.out.println(m_playerCount);
-		//draw();
-		//System.out.println(str);
-		//System.out.println("I pushed a button");
-		
-		
-		drawHand();
-	}
-
+	//returns whether or not a card has been played this turn
 	public boolean getCardPlayed()
 	{
 		return cardPlayed;
 	}
+	//sets whether or not a card has been played this turn
 	public void setCardPlayed(boolean setAs)
 	{
 		cardPlayed = setAs;
 	}
+	//get the current wild selection color
 	public char getWildColor()
 	{
 		return m_wildColor;
 	}
+	//sets the current wild selection color
 	public void setWildColor(char col)
 	{
 		m_wildColor = col;
 	}
+	//returns whether or not the player has drawn a card this turn
 	public boolean getHasDrawn()
 	{
 		return hasDrawn;
 	}
+	//sets whether or not the player has drawn a card this turn
 	public void setHasDrawn(boolean setAs)
 	{
 		hasDrawn = setAs;
 	}
-	
-
-	
+	//returns the discard pile
 	public Deck getDiscardPile()
 	{
 		return m_discardPile;
 	}
+	//returns the draw deck
 	public Deck getDrawDeck()
 	{
 		return m_drawDeck;
 	}
-	public Player getPlayer(int index)
-	{
-		return m_playerList[index];
-	}
-	
+	//returns the current player
 	public Player getCurrentPlayer()
 	{
 		return m_playerList[m_currentPlayer];
 	}
+	//returns the location of the current player in the player list
 	public int getCurrentPlayerLoc()
 	{
 		return m_currentPlayer;
 	}
+	//gets whether or not the "cursor" is locked
 	public boolean getCursorLock()
 	{
 		return cursorLocked;
 	}
+	//returns true if in the WILD SELECT state
 	public boolean isGameInWildState()
 	{
 		if(m_gamestate == STATE_WILD_SELECT)
 		{return true;}
 		return false;
 	}
+	//returns true if in the ROUND OVER state
 	public boolean isGameInRoundOverState()
 	{
 		if(m_gamestate == STATE_ROUND_OVER)
 		{return true;}
 		return false;
 	}
+	//returns true if in the GAME OVER state
 	public boolean isGameInGameOverState()
 	{
 		if(m_gamestate == STATE_GAME_OVER)
 		{return true;}
 		return false;
 	}
+	//returns true if in the HOT SEAT state
 	public boolean isGameInHotSeatState()
 	{
 		if(m_gamestate == STATE_HOT_SEAT)
 		{return true;}
 		return false;
 	}
+	//set game state to PLAY
 	public void setGamePlay()
 	{
 		m_gamestate = STATE_PLAY;
 	}
+	//returns the round count
 	public int getRoundCount()
 	{
 		return m_round;
 	}
+	//sets whether or not the "cursor" is locked
 	public void setCursorLock(boolean setAs)
 	{
 		cursorLocked = setAs;
 	}
+	//return whether or not the player has called uno this turn
 	public boolean getUnoCalled()
 	{
 		return unoCalled;
 	}
+	//return whether or not the player has called failure to call uno this turn
 	public boolean getUnoFailed()
 	{
 		return unoFailed;

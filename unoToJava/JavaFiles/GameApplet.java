@@ -15,18 +15,24 @@ import java.awt.TextField;
 public class GameApplet extends Applet implements Runnable
 
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
-	
-	Game m_game;
-	Button player[];
-	Button wildSelect[];
+	Game m_game;						//the game
+	static final int buttonCount = 9;
+	Button player[];					//buttons
+	Button wildSelect[];				//wild buttons
+	static final int WILD_COUNT = 4;
+	static final int WILD_BLUE = 0;
+	static final int WILD_RED = 1;
+	static final int WILD_GREEN = 2;
+	static final int WILD_YELLOW = 3;
 	Button cards[];
-	Button action[];
-	boolean cardsSet = false;
+	Button action[];					//action buttons
+	int actionCount = 4;
+	static final int ACTION_DRAW = 0;
+	static final int ACTION_END = 1;
+	static final int ACTION_UNO = 2;
+	static final int ACTION_FAIL = 3;
 	Button label1;
 	Button label2;
 	Button playerName;
@@ -34,58 +40,52 @@ public class GameApplet extends Applet implements Runnable
 	Button roundOver;
 	Button gameOver;
 
-	Label inputLabel;
-	TextField nameBlock;
+	Label inputLabel;					//label for name input screen
+	TextField nameBlock;				//text field to input name
+	int playerCounter = 0;				//used for the label
+	int numOfPlayers;					//stores the number of players
+	String PlayerNames[];				//holds an array of player names
 
-	static final int buttonCount = 9;
-	int numOfPlayers;
-
-	Graphics g;
-
-	String PlayerNames[];
-	int playerCounter = 0;
+	boolean cardsSet = false;
 	boolean runOnce = true;
-
 	boolean playerSet = false;
 	boolean Setupdone = false;
+	boolean roundEnd = false;
 	
-
+	//this runs when the applet is created
 	public void init()
 	{
 		this.setSize(new Dimension(700, 480));
 		this.setBackground(new Color(225, 128, 225));
 		this.setFont(new Font("Arial", 0, 18));
-//		try {
-			
-//			m_game = new Game(5, 
-//					"../unoDeck.txt");
+		//had issues reading from file, so we're loading in a hard-coded deck
+/*		try {			
+			m_game = new Game(5, 
+					"../unoDeck.txt");
 					//f.getAbsolutePath()+"./unoDeck.txt");
 					//"C:/Eclipse/workspace/uno2Java/unoDeck.txt");
-//		} catch (IOException e) {
+		} catch (IOException e) {
 			//fail-safe
 			//ideally we want to read from the file, because thats the way the 
 			//program was originally designed in DOS, but if for some reason, java can't
 			//locate the text file, we have the deck hard-coded in
 			m_game = new Game(5);
-//		}
-		playerNumButtons();
-		addKeyListener(m_game.getUI());
+		}*/
+		m_game = new Game(5);			//create the game
+		playerNumButtons();				//get the number of players
+		addKeyListener(m_game.getUI());	//add key and mouse listener
 		addMouseListener(m_game.getUI());
 
-
-		Thread t = new Thread(this);
+		Thread t = new Thread(this);	//start thread
 		t.start();
-
-
 	}
 	
-	
+	//draws the UI
 	public void paint(Graphics g)
 	{
 
 
-		validate();
-		//m_game.draw(g);	
+		validate();	
 		if(Setupdone)
 		{
 			if(!m_game.isGameInRoundOverState())
@@ -107,10 +107,9 @@ public class GameApplet extends Applet implements Runnable
 			}
 		}
 		
-		//repaint();
 	}
 	
-	
+	//gets the number of players
 	public void playerNumButtons()
 	{
 		Label output_label;
@@ -124,12 +123,9 @@ public class GameApplet extends Applet implements Runnable
 		}
 	}
 	
-	int actionCount = 4;
-	static final int ACTION_DRAW = 0;
-	static final int ACTION_END = 1;
-	static final int ACTION_UNO = 2;
-	static final int ACTION_FAIL = 3;
-	
+	//displays the current player each turn
+	//NOTE: had issues printing a label before buttons (nothing would display)
+			//so we are using a button that has no effect
 	public void playerNameLabel()
 	{
 		playerName = new Button("CURRENT PLAYER: " + m_game.getCurrentPlayer().getName());
@@ -137,6 +133,7 @@ public class GameApplet extends Applet implements Runnable
 		add(playerName);
 	}
 	
+	//display action buttons
 	public void actionButtons()
 	{
 		//Current player
@@ -154,6 +151,7 @@ public class GameApplet extends Applet implements Runnable
 		}
 	}
 	
+	//input player names
 	public void playerNames()
 	{
 		
@@ -165,11 +163,7 @@ public class GameApplet extends Applet implements Runnable
 		
 	}
 	
-	static final int WILD_COUNT = 4;
-	static final int WILD_BLUE = 0;
-	static final int WILD_RED = 1;
-	static final int WILD_GREEN = 2;
-	static final int WILD_YELLOW = 3;
+	//choose the wild select color
 	public void wildSelection()
 	{
 		//remove all buttons
@@ -200,10 +194,11 @@ public class GameApplet extends Applet implements Runnable
 		label2.setPreferredSize(new Dimension(700, 20));
 		add(label2);
 		
-		drawHand();
+		drawHand(); //drawn only for reference
 		
 	}
 	
+	//load hot seat button between turns in order to hide player hands
 	public void loadHotSeat()
 	{
 		removeAll();
@@ -216,6 +211,8 @@ public class GameApplet extends Applet implements Runnable
 		add(hotSeat);
 		
 	}
+	
+	//load button at the end of each round
 	public void loadRoundOverButton()
 	{
 		roundOver = new Button("CLICK TO CONTINUE");
@@ -225,6 +222,8 @@ public class GameApplet extends Applet implements Runnable
 		roundOver.setPreferredSize(new Dimension(700, 160));
 		add(roundOver);
 	}
+	
+	//load button when the game is over
 	public void loadGameOverButton()
 	{
 		gameOver = new Button("WINNER!!!");
@@ -235,6 +234,7 @@ public class GameApplet extends Applet implements Runnable
 		add(gameOver);
 	}
 	
+	//what to do whenever a button is clicked...
 	public boolean action (Event e, Object args)
 	  { 
 		
@@ -264,7 +264,6 @@ public class GameApplet extends Applet implements Runnable
 			removeAll();
 			actionButtons();
 			drawHand();
-			Setupdone = true;
 		}
 		if(cardsSet)
 		{
@@ -294,7 +293,7 @@ public class GameApplet extends Applet implements Runnable
 	    return true;    // Yes, we do need this!
 	  }
 
-
+	//when a player number button is clicked...
 	public void actionPlayerNum(Event e, Object args)
 	{
 		for(int i = 0; i < buttonCount; ++i)
@@ -316,6 +315,8 @@ public class GameApplet extends Applet implements Runnable
 			
 		}
 	}
+	
+	//when a wild select button is clicked...
 	public void actionWild(Event e, Object args)
 	{
 		for(int r = 0; r < WILD_COUNT; ++r)
@@ -341,6 +342,8 @@ public class GameApplet extends Applet implements Runnable
 			}
 		}
 	}
+	
+	//when an action button is clicked...
 	public void actionActionButtons(Event e, Object args)
 	{
 		for(int n = 0; n < actionCount; ++n)
@@ -373,7 +376,7 @@ public class GameApplet extends Applet implements Runnable
 						//actionButtons();
 						//drawHand();
 						loadHotSeat();
-						System.out.println("\nDeck: " + m_game.getDrawDeck().getNumOfCards());
+						System.out.println("\nDeck: " + m_game.getDrawDeck().getNumOfCards()); //TODO REMOVE DEBUG
 						System.out.println("\nDiscard: " + m_game.getDiscardPile().getNumOfCards());
 						System.out.println("\nCurrent Player: " + m_game.getCurrentPlayer().getHand().getNumOfCards());
 					}
@@ -401,20 +404,20 @@ public class GameApplet extends Applet implements Runnable
 			}
 		}
 	}
+	
+	//when a card button is clicked...
 	public void actionPlayCard(Event e, Object args)
 	{
 		int q = 0;
-		int j = 0;
-		int offset = 0;
+		int counter = 0;
 		char t = ' ', c = ' ';
 		
-		for(int i=0; i<m_game.getCurrentPlayer().getHand().getNumOfCards() - offset; ++i)//m_game.getCurrentPlayer().getHand().getColorAt(i) != lastColor || m_game.getCurrentPlayer().getHand().getTypeAt(i) != lastType; ++i)
+		for(int i=0; i<m_game.getCurrentPlayer().getHand().getSize(); ++i)
 		{
 			q = m_game.getCurrentPlayer().getHand().getQuantityAt(i);
 			while(q > 0)	
 			{
-				//System.out.println(e.target);
-				if(e.target == cards[j])
+				if(e.target == cards[counter])
 				{
 					//if the cursor is locked, set the look at to the last card drawn
 					if(m_game.getCursorLock())
@@ -425,13 +428,13 @@ public class GameApplet extends Applet implements Runnable
 					if(m_game.isCardLegal(i) && !m_game.getCardPlayed())
 					{
 						//play card function here
-						System.out.print("Yes, you can play the card at location ");
+
 						//first re-save type and color directly from deck
 						t = m_game.getCurrentPlayer().getHand().getTypeAt(i);
 						c = m_game.getCurrentPlayer().getHand().getColorAt(i);
 						//then add the card to the pile
 						m_game.getCurrentPlayer().getHand().addFromHandToPile(i, m_game.getDiscardPile());
-						System.out.println(m_game.getDiscardPile().getColorAt(m_game.getDiscardPile().getLastCard()));
+
 						removeAll(); //clear all
 						actionButtons();
 						drawHand(); //redraw hand
@@ -458,7 +461,7 @@ public class GameApplet extends Applet implements Runnable
 							if(m_game.isGameInRoundOverState())
 							{
 								loadRoundOverButton();
-								//Setupdone = false;
+								roundEnd = true;
 							}
 							else //game over
 							{
@@ -467,27 +470,20 @@ public class GameApplet extends Applet implements Runnable
 						}
 						
 					}
-					else
-					{
-						System.out.print("No, you can't play the card at location ");
-					}
 					
-					//System.out.print(i);
-					//System.out.print("\n");
-					
-					i=m_game.getCurrentPlayer().getHand().getNumOfCards();//checks to see if the card is legal
+					//TODO maybe remove???
+					//i=m_game.getCurrentPlayer().getHand().getNumOfCards();//checks to see if the card is legal
 					
 				}
-				if(q > 1)
-				{
-					offset +=1;
-				}
-				j++;
+
+				counter++;
 				--q;
 			}
 		}
 
 	}
+	
+	//when a players name is entered...
 	public void actionPlayerName(Event e, Object args)
 	{
 		if (e.target == nameBlock && runOnce == true)
@@ -496,7 +492,6 @@ public class GameApplet extends Applet implements Runnable
     		nameBlock.setText("");
     		playerCounter++;
     		runOnce = false;
-    		//m_game.setPlayerNames(PlayerNames);
     		removeAll();//clean
     		playerNames();//print new label and text field
         	
@@ -507,16 +502,15 @@ public class GameApplet extends Applet implements Runnable
         	removeAll();
         	//first game drawing start here
         	loadHotSeat();	
-        	//actionButtons();
-        	//drawHand();
 			Setupdone = true;
         }   
 	}
 	
+	//draw the players hand
 	public void drawHand()
 	{
 		
-
+		//TODO REMVOVE THESE
 		int current = m_game.getDiscardPile().getLastCard();
 		System.out.print("\n");
 		System.out.print(m_game.getDiscardPile().getColorAt(current));
@@ -531,15 +525,16 @@ public class GameApplet extends Applet implements Runnable
 		Player player = m_game.getCurrentPlayer();
 		cards = new Button[player.getHand().getNumOfCards()];
 		int q = 0;
-		int j = 0;
-		int offset = 0;
+		int counter = 0;
+		//TODO REMOVE OFFSET JUNK =)
+		//int offset = 0;
 		
 		String color, type;
 		/**
 		 * sets the color for each card and creates the buttons
 		 */
-		for(int i=0; i<(player.getHand().getNumOfCards() - offset); ++i)
-		//for(int i=0; i<player.getHand().getSize(); ++i)
+		for(int i=0; i<player.getHand().getSize(); ++i)
+		//for(int i=0; i<m_game.getCurrentPlayer().getHand().getNumOfCards() - offset; ++i)
 		{
 			q = player.getHand().getQuantityAt(i);
 			color = getColor(player, i);
@@ -547,44 +542,56 @@ public class GameApplet extends Applet implements Runnable
 			//print all duplicates
 			while(q > 0)
 			{
-				cards[j] = new Button("" + color 
+				cards[counter] = new Button("" + color 
 						+ " " + type);
 				switch(player.getHand().getColorAt(i))
 				{
-				case 'B':	cards[j].setBackground(new Color(0, 0, 255));	
-							cards[j].setForeground(new Color(0, 0, 0));	break;
-				case 'R':	cards[j].setBackground(new Color(255, 0, 0));	
-							cards[j].setForeground(new Color(0, 0, 0));	break;
-				case 'G':	cards[j].setBackground(new Color(0, 255, 0));	
-							cards[j].setForeground(new Color(0, 0, 0));	break;
-				case 'Y':	cards[j].setBackground(new Color(255, 255, 0));	
-							cards[j].setForeground(new Color(0, 0, 0));	break;
-				case 'W':	cards[j].setBackground(new Color(0, 0, 0));	
-							cards[j].setForeground(new Color(255, 255, 255));	break;
+				case 'B':	cards[counter].setBackground(new Color(0, 0, 255));	
+							cards[counter].setForeground(new Color(0, 0, 0));	break;
+				case 'R':	cards[counter].setBackground(new Color(255, 0, 0));	
+							cards[counter].setForeground(new Color(0, 0, 0));	break;
+				case 'G':	cards[counter].setBackground(new Color(0, 255, 0));	
+							cards[counter].setForeground(new Color(0, 0, 0));	break;
+				case 'Y':	cards[counter].setBackground(new Color(255, 255, 0));	
+							cards[counter].setForeground(new Color(0, 0, 0));	break;
+				case 'W':	cards[counter].setBackground(new Color(0, 0, 0));	
+							cards[counter].setForeground(new Color(255, 255, 255));	break;
 				}
-				cards[j].setPreferredSize(new Dimension(150, 20));
-				//buttons.add(cards[i]);
-				add(cards[j]);
-				if(q > 1)
-				{
-					offset += 1;
-				}
+				cards[counter].setPreferredSize(new Dimension(150, 20));
+				add(cards[counter]);
+				//if(q > 1)
+				//{
+				//	offset++;
+				//}
 				--q;
-				j++;
+				counter++;
 			}
 		}
 		/*****************/
-		
+		//TODO REMOVE THIS IF NOT NEEDED
+		//if(counter > m_game.getCurrentPlayer().getHand().getNumOfCards())
+		/*if(roundEnd)
+		{
+			for(int i = 0; i < m_game.getPlayerCount(); ++i)
+			{
+				if(m_game.getPlayerAt(i).getHand().getNumOfCards() > 9)//TODO REMOVE THE MAGIC
+				{
+					m_game.reload();
+					removeAll();
+					actionButtons(); //TODO ADD THIS BACK IN
+					drawHand();
+					repaint();
+				}
+			}
+			roundEnd = false;
+		}*/
 		cardsSet = true;
 	}
 
-	
+	//when the cursor is locked (when a player has drawn a card)
+	//display only the card they drew from the deck
 	public void drawLastCard()
 	{
-		
-		
-		
-		//buttons = new JPanel();
 		Player player = m_game.getCurrentPlayer();
 		cards = new Button[1];
 
@@ -594,29 +601,27 @@ public class GameApplet extends Applet implements Runnable
 		 * sets the color for each card and creates the buttons
 		 */
 		
-			
-			color = getColor(player, player.getHand().getLastCard());
-			type = getType(player, player.getHand().getLastCard());
-			//print all duplicates
+		color = getColor(player, player.getHand().getLastCard());
+		type = getType(player, player.getHand().getLastCard());
 
-			cards[0] = new Button("" + color 
-					+ " " + type);
-			switch(player.getHand().getColorAt(player.getHand().getLastCard()))
-			{
-			case 'B':	cards[0].setBackground(new Color(0, 0, 255));	
-						cards[0].setForeground(new Color(0, 0, 0));	break;
-			case 'R':	cards[0].setBackground(new Color(255, 0, 0));	
-						cards[0].setForeground(new Color(0, 0, 0));	break;
-			case 'G':	cards[0].setBackground(new Color(0, 255, 0));	
-						cards[0].setForeground(new Color(0, 0, 0));	break;
-			case 'Y':	cards[0].setBackground(new Color(255, 255, 0));	
-						cards[0].setForeground(new Color(0, 0, 0));	break;
-			case 'W':	cards[0].setBackground(new Color(0, 0, 0));	
-						cards[0].setForeground(new Color(255, 255, 255));	break;
-			}
-			cards[0].setPreferredSize(new Dimension(150, 20));
-			//buttons.add(cards[i]);
-			add(cards[0]);
+		cards[0] = new Button("" + color 
+				+ " " + type);
+		switch(player.getHand().getColorAt(player.getHand().getLastCard()))
+		{
+		case 'B':	cards[0].setBackground(new Color(0, 0, 255));	
+					cards[0].setForeground(new Color(0, 0, 0));	break;
+		case 'R':	cards[0].setBackground(new Color(255, 0, 0));	
+					cards[0].setForeground(new Color(0, 0, 0));	break;
+		case 'G':	cards[0].setBackground(new Color(0, 255, 0));	
+					cards[0].setForeground(new Color(0, 0, 0));	break;
+		case 'Y':	cards[0].setBackground(new Color(255, 255, 0));	
+					cards[0].setForeground(new Color(0, 0, 0));	break;
+		case 'W':	cards[0].setBackground(new Color(0, 0, 0));	
+					cards[0].setForeground(new Color(255, 255, 255));	break;
+		}
+		cards[0].setPreferredSize(new Dimension(150, 20));
+		//buttons.add(cards[i]);
+		add(cards[0]);
 		
 		/*****************/
 		
@@ -625,25 +630,24 @@ public class GameApplet extends Applet implements Runnable
 	
 	
 	//@Override
+	//run the thread
 	public void run() {
 		while(true)
 		{
-//			System.out.println("repaint?");
 			repaint();
 			runOnce = true;
 			try{
-				Thread.sleep(1000);
+				Thread.sleep(256); //stop flickering
 			}catch(Exception e){}
 			if(Setupdone)
 			{
 			m_game.clearUnos();//clear all old uno calls
-			}
-
-			
+			}	
 		}
 		
 	}
-	
+
+	//get string to print for each color
 	public String getColor(Player p, int loc)
 	{
 		String temp = " ";
@@ -658,6 +662,7 @@ public class GameApplet extends Applet implements Runnable
 		return temp;
 	}
 	
+	//get string to pring for each type
 	public String getType(Player p, int loc)
 	{
 		String temp = " ";
@@ -690,6 +695,7 @@ public class GameApplet extends Applet implements Runnable
 		return temp;
 	}
 
+	//LOCATIONS and FONTS for top card
 	int topCardX = 300; int topCardBX = 290;//loc
 	int topCardY = 280; int topCardBY = 270;
 	int topCardW = 125; int topCardBW = 145;//width
@@ -704,6 +710,7 @@ public class GameApplet extends Applet implements Runnable
 	int topCardLabelX = 335;
 	int topCardLabelY = 265;
 	
+	//draw top card
 	public void	drawTopCard(Graphics g)
 	{
 		//card border
@@ -775,6 +782,7 @@ public class GameApplet extends Applet implements Runnable
 		
 	}
 	
+	//LOCATIONS and FONTS for hud
 	int hudX = 0; int hud2X = 500;
 	int hudY = 250;
 	int hudW = 250;int hud2W = 199;
@@ -788,7 +796,7 @@ public class GameApplet extends Applet implements Runnable
 	int score_offsetX = 160;
 	Font hudFont = new Font("Arial", 0, 18);
 	
-
+	//draw right side of HUD
 	public void drawHUD(Graphics g)
 	{
 		//draw hud
@@ -826,6 +834,7 @@ public class GameApplet extends Applet implements Runnable
 
 	}
 	
+	//draw left side of HUD
 	public void drawScoreBoard(Graphics g)
 	{
 		g.setColor(Color.black);
@@ -848,6 +857,7 @@ public class GameApplet extends Applet implements Runnable
 		}
 	}
 	
+	//LOCATIONS for round over
 	int headerX = 535;
 	int headerY = 290;
 	int headerX2 = 538;
@@ -865,6 +875,7 @@ public class GameApplet extends Applet implements Runnable
 	int headerX8 = 545;
 	int headerY8 = 460;
 	
+	//draw round over
 	public void drawRoundOver(Graphics g)
 	{
 		g.setColor(Color.black);
@@ -884,6 +895,7 @@ public class GameApplet extends Applet implements Runnable
 		g.drawString("to win the game.", headerX8, headerY8);
 	}
 	
+	//LOCATIONS for game over
 	int headerXo = 550;
 	int headerX2o = 548;
 	int headerX3o = 570;
@@ -892,6 +904,8 @@ public class GameApplet extends Applet implements Runnable
 	int headerX6o = 510;
 	int headerX7o = 555;
 	int headerX8o = 550;
+	
+	//draw game over
 	public void drawGameOver(Graphics g)
 	{
 		g.setColor(Color.black);

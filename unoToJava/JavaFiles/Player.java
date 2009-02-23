@@ -55,7 +55,7 @@ public class Player
 			m_name = new String(tempElements);
 		}
 	}
-	
+	//set the player name
 	public void setNameBetter(String a_n)
 	{
 		String temp = a_n;
@@ -82,6 +82,7 @@ public class Player
 	{
 		System.out.println(m_name);
 	}
+	//returns the players name
 	public String getName()
 	{
 		return m_name;
