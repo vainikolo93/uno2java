@@ -40,16 +40,11 @@ public class NeatWindow extends JPanel implements MouseListener, KeyListener
 		g.setFont(m_font);
 		//super allows you to override a parent class
 		super.paintComponent(g);
-		//TODO add Game.draw()
-		m_parent.draw(g);
-		g.fillRect(10, 10, 100, 100);
 	}
 
 	//@Override
 	public void mouseClicked(MouseEvent arg0) {
 		// TODO Auto-generated method stub
-		System.out.println("Clicked");
-		repaint();
 		
 	}
 
@@ -68,9 +63,7 @@ public class NeatWindow extends JPanel implements MouseListener, KeyListener
 	//@Override
 	public void mousePressed(MouseEvent e) {
 		// TODO Auto-generated method stub
-		System.out.println("preSSed");
-		repaint();
-		
+
 	}
 
 	//@Override
@@ -82,6 +75,7 @@ public class NeatWindow extends JPanel implements MouseListener, KeyListener
 	//@Override
 	public void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub
+		
 	}
 
 	//@Override
@@ -91,13 +85,9 @@ public class NeatWindow extends JPanel implements MouseListener, KeyListener
 	}
 
 	//@Override
-	//using keyTyped() because getKeyChar() only works with
-	//this function
 	public void keyTyped(KeyEvent e) 
 	{
-		m_parent.handleInput(e);
-		//redraw window
-		repaint();
+		// TODO Auto-generated method stub
 		
 	}
 
