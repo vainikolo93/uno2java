@@ -55,7 +55,7 @@ public class GameApplet extends Applet implements Runnable
 	//this runs when the applet is created
 	public void init()
 	{
-		this.setSize(new Dimension(700, 480));
+		this.setSize(new Dimension(700, 500));//480));
 		this.setBackground(new Color(225, 128, 225));
 		this.setFont(new Font("Arial", 0, 18));
 		//had issues reading from file, so we're loading in a hard-coded deck
@@ -106,7 +106,8 @@ public class GameApplet extends Applet implements Runnable
 				drawScoreBoard(g);
 			}
 		}
-		
+		g.setColor(new Color(225,225,225));
+		g.drawString("COPYRIGHT MATTEL GAMES", 446, 496);
 	}
 	
 	//gets the number of players
@@ -372,13 +373,7 @@ public class GameApplet extends Applet implements Runnable
 					if(m_game.getCardPlayed() || (m_game.getHasDrawn() && !m_game.isCardLegal(m_game.getCurrentPlayer().getHand().getLastCard())))
 					{
 						m_game.endTurn();
-						//removeAll();
-						//actionButtons();
-						//drawHand();
-						loadHotSeat();
-						System.out.println("\nDeck: " + m_game.getDrawDeck().getNumOfCards()); //TODO REMOVE DEBUG
-						System.out.println("\nDiscard: " + m_game.getDiscardPile().getNumOfCards());
-						System.out.println("\nCurrent Player: " + m_game.getCurrentPlayer().getHand().getNumOfCards());
+						loadHotSeat();;
 					}
 					break;
 				case ACTION_UNO:
@@ -397,7 +392,6 @@ public class GameApplet extends Applet implements Runnable
 						removeAll();
 						actionButtons();
 						drawHand();
-						//m_game.reload();
 					}
 					break;
 				}
@@ -469,13 +463,8 @@ public class GameApplet extends Applet implements Runnable
 							}
 						}
 						
-					}
-					
-					//TODO maybe remove???
-					//i=m_game.getCurrentPlayer().getHand().getNumOfCards();//checks to see if the card is legal
-					
+					}					
 				}
-
 				counter++;
 				--q;
 			}
@@ -509,32 +498,16 @@ public class GameApplet extends Applet implements Runnable
 	//draw the players hand
 	public void drawHand()
 	{
-		
-		//TODO REMVOVE THESE
-		int current = m_game.getDiscardPile().getLastCard();
-		System.out.print("\n");
-		System.out.print(m_game.getDiscardPile().getColorAt(current));
-		System.out.print(" ");
-		System.out.print(m_game.getDiscardPile().getTypeAt(current));
-		System.out.print("\n");
-		
-		/******************/
-		
-		
-		//buttons = new JPanel();
 		Player player = m_game.getCurrentPlayer();
 		cards = new Button[player.getHand().getNumOfCards()];
 		int q = 0;
 		int counter = 0;
-		//TODO REMOVE OFFSET JUNK =)
-		//int offset = 0;
 		
 		String color, type;
 		/**
 		 * sets the color for each card and creates the buttons
 		 */
 		for(int i=0; i<player.getHand().getSize(); ++i)
-		//for(int i=0; i<m_game.getCurrentPlayer().getHand().getNumOfCards() - offset; ++i)
 		{
 			q = player.getHand().getQuantityAt(i);
 			color = getColor(player, i);
@@ -559,32 +532,11 @@ public class GameApplet extends Applet implements Runnable
 				}
 				cards[counter].setPreferredSize(new Dimension(150, 20));
 				add(cards[counter]);
-				//if(q > 1)
-				//{
-				//	offset++;
-				//}
 				--q;
 				counter++;
 			}
 		}
 		/*****************/
-		//TODO REMOVE THIS IF NOT NEEDED
-		//if(counter > m_game.getCurrentPlayer().getHand().getNumOfCards())
-		/*if(roundEnd)
-		{
-			for(int i = 0; i < m_game.getPlayerCount(); ++i)
-			{
-				if(m_game.getPlayerAt(i).getHand().getNumOfCards() > 9)//TODO REMOVE THE MAGIC
-				{
-					m_game.reload();
-					removeAll();
-					actionButtons(); //TODO ADD THIS BACK IN
-					drawHand();
-					repaint();
-				}
-			}
-			roundEnd = false;
-		}*/
 		cardsSet = true;
 	}
 
@@ -628,16 +580,16 @@ public class GameApplet extends Applet implements Runnable
 		cardsSet = true;
 	}
 	
-	
 	//@Override
 	//run the thread
-	public void run() {
+	public void run()
+	{
 		while(true)
 		{
 			repaint();
 			runOnce = true;
 			try{
-				Thread.sleep(256); //stop flickering
+				Thread.sleep(150); //stop flickering
 			}catch(Exception e){}
 			if(Setupdone)
 			{

@@ -185,7 +185,7 @@ public class Deck
 			}
 			if(i > 10)//TODO REMOVE THIS MCUGLY
 			{
-				m_data[i].m_quantity = 0; 
+				//m_data[i].m_quantity = 0; 
 			}
 			//update total card quantity
 			m_numOfCards += m_data[i].m_quantity;
@@ -351,8 +351,19 @@ public class Deck
 			Random rand = new Random();
 			int card = rand.nextInt(getSize());
 			
+			int check = other.getNumOfCards();
 			//save the cards into another deck(i.e. pile)
 			addCardToOther(card, other);
+			//System.out.println("OTHER :" + other.getNumOfCards()); //TODO REMOVE FROM DRAWCARD()
+			if(other.getNumOfCards() > check +1)
+			{
+				System.out.println("------------FAIL!!!!!!-------------");
+				//Deck temp = new Deck(this);
+				//temp = storeCopy();
+				//clearAll();
+				//addCopy(temp);
+				//addCardToOther(card, other);
+			}
 			
 			//if the quantity = 0, move this element to the end of the deck
 			if(m_data[card].m_quantity == 0)
@@ -384,29 +395,15 @@ public class Deck
 				other.m_lastCard = r;
 			}
 		}
-		
 		//if the card is not in the deck, add it to the end
 		if(!isAdded)
 		{
-			try
-			{
 			other.m_data[other.m_size].m_type = m_data[card].m_type;
 			other.m_data[other.m_size].m_color = m_data[card].m_color;
 			other.m_data[other.m_size].m_quantity = 1;
 			m_data[card].m_quantity--;
 			//save location of last card added
-			other.m_lastCard = other.m_size;
-			}
-			catch(Exception e)
-			{
-				other.m_data[other.m_size-1].m_type = m_data[card].m_type;
-				other.m_data[other.m_size-1].m_color = m_data[card].m_color;
-				other.m_data[other.m_size-1].m_quantity = 1;
-				m_data[card].m_quantity--;
-				//save location of last card added
-				other.m_lastCard = other.m_size-1;
-			}
-			
+			other.m_lastCard = other.m_size;			
 		}
 	}
 	//after a card's quantity is reduced to zero
@@ -570,11 +567,34 @@ public class Deck
 	//clear everything in the deck
 	public void clearAll()
 	{
+		m_size = 0;
+		m_numOfCards = 0;
 		for(int r = 0; r < m_length; ++r)
 		{
 			m_data[r].m_type = '0';
 			m_data[r].m_color = '0';
 			m_data[r].m_quantity = 0;
+		}
+	}
+
+	public Deck storeCopy()
+	{
+		Deck temp = new Deck(this);
+		for(int i = 0; i < m_length; ++i)
+		{
+			temp.m_data[i].m_color = m_data[i].m_color;
+			temp.m_data[i].m_type = m_data[i].m_type;
+			temp.m_data[i].m_quantity = m_data[i].m_quantity;
+		}
+		return temp;
+	}
+	public void addCopy(Deck other)
+	{
+		for(int i = 0; i < m_length; ++i)
+		{
+			m_data[i].m_color = other.m_data[i].m_color;
+			m_data[i].m_type = other.m_data[i].m_type;
+			m_data[i].m_quantity = other.m_data[i].m_quantity;
 		}
 	}
 }

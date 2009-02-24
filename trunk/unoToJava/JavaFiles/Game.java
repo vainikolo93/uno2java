@@ -486,17 +486,20 @@ public class Game
 	public void reload()
 	{
 		//shuffle the pile back into the deck
-		//TODO REMOVE JUNK
-		//m_drawDeck.shuffle(m_discardPile);
+		//Shuffle function was causing out of bounds array issues in Java
+				//m_drawDeck.shuffle(m_discardPile);
+		//therefore we reload the draw deck
 		m_drawDeck.loadMcNasty();
-		//m_discardPile.load(m_drawDeck);
+				//m_discardPile.load(m_drawDeck);
+		//and clear the other decks
 		m_discardPile.clearAll();
 		
 		//shuffle all hands back into deck
 		for(int i = 0; i < m_playerCount; ++i)
 		{
-			//m_drawDeck.shuffle(m_playerList[i].getHand());
-			//m_playerList[i].load(m_drawDeck);
+					//m_drawDeck.shuffle(m_playerList[i].getHand());
+					//m_playerList[i].load(m_drawDeck);
+			//clear hands
 			m_playerList[i].getHand().clearAll();
 		}
 		
@@ -508,7 +511,8 @@ public class Game
 		for(int i = 0; i < m_playerCount; ++i)
 		{
 			//deal cards
-			for(int n = 0; n < INITIAL_HAND; ++n)
+					//for(int n = 0; n < INITIAL_HAND; ++n)
+			while(m_playerList[i].getHand().getNumOfCards() < INITIAL_HAND)
 			{
 				m_drawDeck.drawCard(m_playerList[i].getHand());
 			}
@@ -805,6 +809,7 @@ public class Game
 	{
 		return unoFailed;
 	}
+
 	/**
 	 * "#defines"
 	 * we don't like magic numbers
