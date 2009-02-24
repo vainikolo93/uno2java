@@ -22,7 +22,7 @@ public class NeatWindow extends JPanel implements MouseListener, KeyListener
 	
 	public Dimension getPreferredSize()
 	{
-		return new Dimension(200, 200);
+		return new Dimension(700, 500);
 	}
 	
 	public NeatWindow(Game a_parent)
